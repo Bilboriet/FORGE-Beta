@@ -1,0 +1,90 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
+import "./index.css";
+import App from "./App.tsx";
+
+console.log("FORGE MAIN LOADED");
+
+// Dev-safety: unregister any old Service Workers (prevents Workbox caching issues)
+if (import.meta.env.DEV && "serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then((regs) => {
+    regs.forEach((r) => r.unregister());
+  });
+  if ("caches" in window) {
+    caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+  }
+}
+
+function reportGlobalError(tag: string, payload: unknown) {
+  console.error(`[FORGE][APP][${tag}]`, payload);
+  if (!import.meta.env.DEV) return;
+
+  const id = "forge-dev-error-banner";
+  const old = document.getElementById(id);
+  if (old) old.remove();
+
+  const el = document.createElement("div");
+  el.id = id;
+  el.textContent = "App error - reload";
+  Object.assign(el.style, {
+    position: "fixed",
+    top: "8px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: "2147483647",
+    background: "rgba(20,0,0,0.92)",
+    color: "#ffb4b4",
+    border: "1px solid rgba(225,29,42,0.55)",
+    borderRadius: "999px",
+    padding: "6px 12px",
+    fontSize: "12px",
+    fontWeight: "700",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.45)",
+    pointerEvents: "none",
+  });
+  document.body.appendChild(el);
+}
+
+window.addEventListener("error", (event) => {
+  reportGlobalError("ERROR", {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    error: event.error,
+  });
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  reportGlobalError("UNHANDLED_REJECTION", { reason: event.reason });
+});
+
+if ("serviceWorker" in navigator) {
+  registerSW({
+    immediate: true,
+    onNeedRefresh() {
+      console.warn("[FORGE][SW] New version available, reloading...");
+      window.location.reload();
+    },
+    onOfflineReady() {
+      console.info("[FORGE][SW] Offline ready");
+    },
+    onRegisteredSW(swUrl, registration) {
+      console.info("[FORGE][SW] registered", swUrl);
+      if (!registration) return;
+      registration.addEventListener("updatefound", () => {
+        console.info("[FORGE][SW] update found");
+      });
+    },
+    onRegisterError(error) {
+      console.error("[FORGE][SW] register error", error);
+    },
+  });
+}
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

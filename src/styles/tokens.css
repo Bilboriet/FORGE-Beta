@@ -1,0 +1,125 @@
+:root{
+  color-scheme: dark;
+
+  /* Forge glow single source of truth */
+  --forge-red: #e11d2a;
+  --forge-red-hot: rgba(255, 80, 40, 0.35);
+  --forge-red-mid: rgba(255, 60, 30, 0.28);
+  --forge-red-deep: rgba(255, 40, 20, 0.18);
+  --forge-red-soft-hot: rgba(255, 80, 40, 0.22);
+  --forge-red-soft-mid: rgba(255, 60, 30, 0.16);
+  --forge-red-top: #ff3a2a;
+  --forge-red-bottom: #7a0f16;
+  --forge-glow-tight: 0 0 4px var(--forge-red-hot), 0 0 9px var(--forge-red-mid), 0 0 14px var(--forge-red-deep);
+  --forge-glow-soft: 0 0 3px var(--forge-red-soft-hot), 0 0 7px var(--forge-red-soft-mid);
+
+  /* Obsidian base */
+  --bg: #0b0c0f;
+  --bg2: #07080b;
+
+  /* Steel plates (darker, less gray) */
+  --card: #0c0d11;
+  --card2: #08090c;
+  --well: rgba(0,0,0,0.22);
+
+  /* Lines */
+  --border: rgba(255,255,255,0.085);
+  --stroke: rgba(255,255,255,0.060);
+
+  /* Text */
+  --text: rgba(255,255,255,0.92);
+  --section-title: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.72);
+  --faint: rgba(255,255,255,0.42);
+
+  /* Blood red (headings + brand) */
+  --red: var(--forge-red);        /* heading blood red */
+  --redHot: #c21010;              /* active/heat (controlled) */
+  --redSoft: rgba(143,14,19,0.16);
+
+  /* Shape */
+  --radius: 14px;
+  --radiusSm: 12px;
+  --radiusLg: 18px;
+
+  /* Shadows (deeper, cleaner) */
+  --shadowSoft: 0 14px 36px rgba(0,0,0,0.48);
+  --shadow: 0 28px 84px rgba(0,0,0,0.7);
+
+  /* Surface effects */
+  --specularA: rgba(255,255,255,0.085);
+  --specularB: rgba(255,255,255,0.028);
+
+  --stripeA: rgba(255,255,255,0.003);
+  --stripeB: rgba(255,255,255,0.0015);
+
+  --rimRedA: rgba(255,40,40,0.32);
+  --rimRedB: rgba(143,14,19,0.18);
+
+  /* Heat haze: tiny warm hint (NOT neon/gul lov) */
+  --heatA: rgba(255,120,20,0.12);
+  --heatB: rgba(255,40,40,0.08);
+  --heatC: rgba(255,255,255,0.10);
+
+  /* Blur strengths */
+  --blurRim: 14px;
+  --blurHeat: 18px;
+
+  /* Optional glow strength */
+  --glowSoft: rgba(255,40,40,0.12);
+  --glowHot: rgba(255,120,20,0.10);
+
+  /* Edge frame */
+  --edgeOuter: rgba(255,255,255,0.22);
+  --edgeInnerA: rgba(255,255,255,0.14);
+  --edgeInnerB: rgba(0,0,0,0.55);
+  --edgeRed: rgba(255,40,40,0.18);
+
+  /* Header typography + spacing */
+  --topPadY: 12px;
+  --topPadX: 14px;
+
+  --titleSize: 22px;
+  --titleWeight: 900;
+  --titleTrack: 0.6px;
+
+  --subSize: 12px;
+  --subTrack: 0.9px;
+
+  --headerGlowA: rgba(255,40,40,0.38);
+  --headerGlowB: rgba(255,120,20,0.22);
+
+  /* Bottom nav clearance */
+  --nav-h: 76px;
+  --bottom-nav-h: var(--nav-h);
+
+  /* Spacing scale */
+  --space1: 6px;
+  --space2: 10px;
+  --space3: 12px;
+  --space4: 14px;
+  --space5: 16px;
+
+  /* Page rhythm */
+  --pageGap: 12px;
+  --widgetGap: 12px;
+  --sectionGap: 10px;
+
+  /* Card padding tuning */
+  --padTight: 12px;
+  --padBase: 14px;
+  --padRoomy: 16px;
+
+  /* Nested inner wells */
+  --innerBgA: rgba(0,0,0,0.28);
+  --innerBgB: rgba(0,0,0,0.18);
+  --innerBorder: rgba(255,255,255,0.10);
+  --innerStroke: rgba(255,255,255,0.06);
+
+  --innerGlowRed: rgba(255,40,40,0.08);
+  --innerGlowHeat: rgba(255,120,20,0.06);
+
+  --innerRadius: 14px;
+  --innerShadow: 0 14px 28px rgba(0,0,0,0.45);
+}
+

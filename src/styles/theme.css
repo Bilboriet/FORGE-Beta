@@ -1,0 +1,4 @@
+:root {
+  --text-muted: rgba(255,255,255,0.72);
+  --muted: var(--text-muted);
+}
