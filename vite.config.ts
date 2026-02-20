@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: "auto",
       workbox: {
         skipWaiting: true,
         clientsClaim: true,
@@ -21,26 +22,27 @@ export default defineConfig({
         name: "FORGE",
         short_name: "FORGE",
         description: "Forge – strength training log",
-        theme_color: "#0b0c0f",
-        background_color: "#0b0c0f",
+        theme_color: "#000000",
+        background_color: "#000000",
         display: "standalone",
         start_url: "/",
+        scope: "/",
         icons: [
           {
             src: "/NEWFORGEICON.PNG",
             sizes: "192x192",
             type: "image/png",
-            purpose: "any maskable",
           },
           {
             src: "/NEWFORGEICON.PNG",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
           },
         ],
       },
     }),
   ],
 });
+
+
 
