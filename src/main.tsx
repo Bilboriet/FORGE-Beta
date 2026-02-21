@@ -5,13 +5,15 @@ import "./index.css";
 import App from "./App.tsx";
 
 console.log("FORGE MAIN LOADED");
+const hasWindow = typeof window !== "undefined";
+const hasNavigator = typeof navigator !== "undefined";
 
 // Dev-safety: unregister any old Service Workers (prevents Workbox caching issues)
-if (import.meta.env.DEV && "serviceWorker" in navigator) {
+if (import.meta.env.DEV && hasNavigator && "serviceWorker" in navigator) {
   navigator.serviceWorker.getRegistrations().then((regs) => {
     regs.forEach((r) => r.unregister());
   });
-  if ("caches" in window) {
+  if (hasWindow && "caches" in window) {
     caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
   }
 }
@@ -46,21 +48,23 @@ function reportGlobalError(tag: string, payload: unknown) {
   document.body.appendChild(el);
 }
 
-window.addEventListener("error", (event) => {
-  reportGlobalError("ERROR", {
-    message: event.message,
-    filename: event.filename,
-    lineno: event.lineno,
-    colno: event.colno,
-    error: event.error,
+if (hasWindow) {
+  window.addEventListener("error", (event) => {
+    reportGlobalError("ERROR", {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      error: event.error,
+    });
   });
-});
 
-window.addEventListener("unhandledrejection", (event) => {
-  reportGlobalError("UNHANDLED_REJECTION", { reason: event.reason });
-});
+  window.addEventListener("unhandledrejection", (event) => {
+    reportGlobalError("UNHANDLED_REJECTION", { reason: event.reason });
+  });
+}
 
-if ("serviceWorker" in navigator) {
+if (hasNavigator && "serviceWorker" in navigator) {
   registerSW({
     immediate: true,
     onNeedRefresh() {

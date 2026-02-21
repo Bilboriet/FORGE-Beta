@@ -1,5 +1,5 @@
 // src/pages/SettingsPage.tsx
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useForgeSettings, LS_SETTINGS } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
@@ -132,6 +132,7 @@ function SelectRow({
 export function SettingsPage() {
   const t = useT();
   const [settings, setSettings] = useForgeSettings();
+  const appVersion = (import.meta.env.VITE_APP_VERSION as string | undefined)?.trim() || "beta";
 
   // pull some core data counts for a "status" card
   const [sessions] = useLocalStorage<any[]>(LS_KEYS.sessions, []);
@@ -141,6 +142,9 @@ export function SettingsPage() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [busy, setBusy] = useState<null | "export" | "import" | "reset">(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState<boolean>(() =>
+    typeof navigator !== "undefined" ? navigator.onLine : false
+  );
 
   const stats = useMemo(() => {
     const s = Array.isArray(sessions) ? sessions.length : 0;
@@ -159,6 +163,71 @@ export function SettingsPage() {
     setSettings((prev) => ({ ...prev, language, updatedAt: new Date().toISOString() }));
     setToast(t(`settings.toast.lang.${language}`));
     setTimeout(() => setToast(null), 1400);
+  }
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  function buildFeedbackText() {
+    const timestamp = new Date().toISOString();
+    const href = typeof window !== "undefined" ? window.location.href : "n/a";
+    const online = typeof navigator !== "undefined" ? (navigator.onLine ? "online" : "offline") : "unknown";
+    const language = settings?.language ?? (typeof navigator !== "undefined" ? navigator.language : "unknown");
+    const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "unknown";
+
+    return [
+      "App: FORGE Beta",
+      `Version: ${appVersion}`,
+      `URL: ${href}`,
+      `Online: ${online}`,
+      `Language: ${language}`,
+      `UserAgent: ${userAgent}`,
+      `Timestamp: ${timestamp}`,
+      "",
+      "---",
+      "Feedback:",
+      "",
+    ].join("\n");
+  }
+
+  async function copyFeedbackText() {
+    const feedbackText = buildFeedbackText();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(feedbackText);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = feedbackText;
+        textarea.setAttribute("readonly", "true");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+      setToast(t("settings.feedback.copied"));
+    } catch {
+      window.alert(feedbackText);
+      setToast(t("settings.feedback.copied"));
+    } finally {
+      setTimeout(() => setToast(null), 1600);
+    }
+  }
+
+  function sendFeedbackEmail() {
+    const subject = encodeURIComponent(t("settings.feedback.subject"));
+    const body = encodeURIComponent(buildFeedbackText());
+    window.location.href = `mailto:Sebastian.Forge.app@gmail.com?subject=${subject}&body=${body}`;
   }
 
   function getAllForgeKeys(): string[] {
@@ -383,6 +452,50 @@ export function SettingsPage() {
     </Card>
   );
 
+  const feedbackBlock = (
+    <Card title={t("settings.feedback.title")} subtitle={t("settings.feedback.description")}>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <Button onClick={sendFeedbackEmail} variant="primary">
+          {t("settings.feedback.send")}
+        </Button>
+        <Button onClick={() => void copyFeedbackText()}>
+          {t("settings.feedback.copy")}
+        </Button>
+      </div>
+
+      <div style={{ color: "var(--muted)", fontSize: 12, lineHeight: 1.35 }}>
+        {t("settings.feedback.privacy")}
+      </div>
+    </Card>
+  );
+
+  const appInfoBlock = (
+    <Card title={t("settings.appInfo.title")}>
+      <div style={{ display: "grid", gap: 6 }}>
+        <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>
+          {t("settings.appInfo.version").toUpperCase()}
+        </div>
+        <div style={{ color: "var(--text)", fontWeight: 900 }}>{appVersion}</div>
+      </div>
+      <div style={{ display: "grid", gap: 6 }}>
+        <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>
+          {t("settings.appInfo.language").toUpperCase()}
+        </div>
+        <div style={{ color: "var(--text)", fontWeight: 900 }}>
+          {settings?.language?.toUpperCase?.() ?? "NO"}
+        </div>
+      </div>
+      <div style={{ display: "grid", gap: 6 }}>
+        <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>
+          {t("settings.appInfo.status").toUpperCase()}
+        </div>
+        <div style={{ color: "var(--text)", fontWeight: 900 }}>
+          {isOnline ? t("settings.appInfo.online") : t("settings.appInfo.offline")}
+        </div>
+      </div>
+    </Card>
+  );
+
   const dataToolsBlock = (
     <CollapsibleSection title={t("settings.section.data")} subtitle={t("settings.dataTools.subtitle")} defaultOpen={false}>
       <div style={{ display: "grid", gap: 12 }}>
@@ -421,6 +534,8 @@ return (
     <div className="forgePage">
       {appPrefs}
       {statusBlock}
+      {feedbackBlock}
+      {appInfoBlock}
       {dataToolsBlock}
     </div>
   );
