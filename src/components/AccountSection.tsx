@@ -1,21 +1,170 @@
-import { useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { useEffect, useMemo, useState } from "react";
+import { LS_KEYS } from "../constants";
 import { useSupabaseAuth } from "../hooks/useSupabaseAuth";
 import { useT } from "../hooks/useT";
+import { backupToCloud, getCloudSummary, restoreFromCloud } from "../lib/cloudVault";
+import { supabase } from "../lib/supabaseClient";
+
+function fmtDateTime(iso: string | null, fallback: string) {
+  if (!iso) return fallback;
+  try {
+    return new Date(iso).toLocaleString();
+  } catch {
+    return fallback;
+  }
+}
 
 export default function AccountSection() {
   const t = useT();
   const { user, loading, error } = useSupabaseAuth();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [authBusy, setAuthBusy] = useState(false);
+  const [vaultBusy, setVaultBusy] = useState<null | "backup" | "restore">(null);
+  const [isOnline, setIsOnline] = useState(() =>
+    typeof navigator !== "undefined" ? navigator.onLine : false
+  );
+  const [cloudCounts, setCloudCounts] = useState<{ sessionsCount: number; templatesCount: number } | null>(null);
+  const [latestUpdatedAt, setLatestUpdatedAt] = useState<string | undefined>(undefined);
 
+  const lastBackupAt =
+    typeof localStorage !== "undefined" ? localStorage.getItem(LS_KEYS.cloudLastBackupAt) : null;
+  const lastRestoreAt =
+    typeof localStorage !== "undefined" ? localStorage.getItem(LS_KEYS.cloudLastRestoreAt) : null;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOnline = () => setIsOnline(true);
+    const onOffline = () => setIsOnline(false);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+
+  async function refreshSummary() {
+    if (!user?.id || !supabase || !isOnline) {
+      setCloudCounts(null);
+      setLatestUpdatedAt(undefined);
+      return;
+    }
+
+    const summary = await getCloudSummary(user.id);
+    if (!summary) {
+      setStatus(t("settings.account.vaultError"));
+      setCloudCounts(null);
+      setLatestUpdatedAt(undefined);
+      return;
+    }
+    setCloudCounts({
+      sessionsCount: summary.sessionsCount,
+      templatesCount: summary.templatesCount,
+    });
+    setLatestUpdatedAt(summary.latestUpdatedAt);
+  }
+
+  useEffect(() => {
+    void refreshSummary();
+  }, [user?.id, isOnline]);
+
+  async function sendLink() {
+    if (!email.includes("@")) {
+      setStatus(t("settings.account.invalidEmail"));
+      return;
+    }
+
+    if (!supabase) {
+      setStatus(t("settings.account.notConfigured"));
+      return;
+    }
+
+    setAuthBusy(true);
+    setStatus("");
+    try {
+      const { error: signInError } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+          emailRedirectTo:
+            typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
+        },
+      });
+      setStatus(signInError ? t("settings.account.error") : t("settings.account.sent"));
+    } catch {
+      setStatus(t("settings.account.error"));
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function signOut() {
+    if (!supabase) return;
+    setAuthBusy(true);
+    try {
+      const { error: signOutError } = await supabase.auth.signOut();
+      setStatus(signOutError ? t("settings.account.error") : "");
+    } catch {
+      setStatus(t("settings.account.error"));
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function handleBackup() {
+    if (!user?.id) return;
+    if (!isOnline) {
+      setStatus(t("settings.account.noNetwork"));
+      return;
+    }
+    setVaultBusy("backup");
+    setStatus(t("settings.account.backupInProgress"));
+    const res = await backupToCloud(user.id);
+    if (!res.ok) {
+      setStatus(res.message || t("settings.account.vaultError"));
+      setVaultBusy(null);
+      return;
+    }
+    setStatus(t("settings.account.backupDone"));
+    setVaultBusy(null);
+    await refreshSummary();
+  }
+
+  async function handleRestore() {
+    if (!user?.id) return;
+    if (!isOnline) {
+      setStatus(t("settings.account.noNetwork"));
+      return;
+    }
+    const ok = window.confirm(t("settings.account.restoreConfirm"));
+    if (!ok) return;
+
+    setVaultBusy("restore");
+    setStatus(t("settings.account.restoreInProgress"));
+    const res = await restoreFromCloud(user.id);
+    if (!res.ok) {
+      setStatus(res.message || t("settings.account.vaultError"));
+      setVaultBusy(null);
+      return;
+    }
+    setStatus(t("settings.account.restoreDone"));
+    setVaultBusy(null);
+    setTimeout(() => {
+      window.location.reload();
+    }, 300);
+  }
+
+  const canRunVaultActions = !!user?.id && !!supabase && isOnline && vaultBusy === null;
   const linkedGlow: React.CSSProperties = user
     ? {
         boxShadow:
           "inset 0 0 0 1px rgba(255,59,59,0.18), 0 10px 28px rgba(255,59,59,0.08)",
       }
     : {};
+  const cloudCountsText = useMemo(() => {
+    if (!cloudCounts) return "-";
+    return `${cloudCounts.sessionsCount} / ${cloudCounts.templatesCount}`;
+  }, [cloudCounts]);
 
   if (!supabase) {
     return (
@@ -30,7 +179,7 @@ export default function AccountSection() {
     return (
       <div className="forge-surface forgeCardInner" style={{ display: "grid", gap: 10 }}>
         <h3 style={{ margin: 0, fontWeight: 950, letterSpacing: 0.2 }}>{t("settings.account.title")}</h3>
-        <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.4 }}>{t("settings.account.error")}</p>
+        <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.4 }}>{t("settings.account.vaultError")}</p>
       </div>
     );
   }
@@ -42,42 +191,6 @@ export default function AccountSection() {
         <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.4 }}>{t("settings.account.loading")}</p>
       </div>
     );
-  }
-
-  async function sendLink() {
-    if (!email.includes("@")) {
-      setStatus(t("settings.account.invalidEmail"));
-      return;
-    }
-    setStatus("");
-    setBusy(true);
-    try {
-      const { error: signInError } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
-        options: {
-          emailRedirectTo:
-            typeof window !== "undefined" ? window.location.origin : undefined,
-        },
-      });
-      setStatus(signInError ? t("settings.account.error") : t("settings.account.sent"));
-    } catch {
-      setStatus(t("settings.account.error"));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function signOut() {
-    setBusy(true);
-    try {
-      const { error: signOutError } = await supabase.auth.signOut();
-      if (signOutError) setStatus(t("settings.account.error"));
-      else setStatus("");
-    } catch {
-      setStatus(t("settings.account.error"));
-    } finally {
-      setBusy(false);
-    }
   }
 
   return (
@@ -120,16 +233,16 @@ export default function AccountSection() {
           <button
             type="button"
             onClick={() => void sendLink()}
-            disabled={busy || !email.trim()}
+            disabled={authBusy || !email.trim()}
             style={{
               padding: "10px 12px",
               borderRadius: 12,
               border: "1px solid rgba(255,59,59,0.35)",
               background: "rgba(255,59,59,0.1)",
               color: "rgb(246,198,198)",
-              cursor: busy || !email.trim() ? "not-allowed" : "pointer",
+              cursor: authBusy || !email.trim() ? "not-allowed" : "pointer",
               fontWeight: 900,
-              opacity: busy || !email.trim() ? 0.55 : 1,
+              opacity: authBusy || !email.trim() ? 0.55 : 1,
             }}
           >
             {t("settings.account.sendLink")}
@@ -148,16 +261,16 @@ export default function AccountSection() {
           <button
             type="button"
             onClick={() => void signOut()}
-            disabled={busy}
+            disabled={authBusy || vaultBusy !== null}
             style={{
               padding: "10px 12px",
               borderRadius: 12,
               border: "1px solid rgba(255,59,59,0.65)",
               background: "rgba(255,59,59,0.12)",
               color: "rgb(255,201,201)",
-              cursor: busy ? "not-allowed" : "pointer",
+              cursor: authBusy || vaultBusy !== null ? "not-allowed" : "pointer",
               fontWeight: 900,
-              opacity: busy ? 0.55 : 1,
+              opacity: authBusy || vaultBusy !== null ? 0.55 : 1,
             }}
           >
             {t("settings.account.signOut")}
@@ -178,38 +291,57 @@ export default function AccountSection() {
             <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.35 }}>
               {t("settings.account.cloudVaultSubtitle")}
             </p>
+            {!isOnline ? (
+              <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                {t("settings.account.noNetwork")}
+              </div>
+            ) : null}
+            <div style={{ display: "grid", gap: 6, fontSize: 12 }}>
+              <div style={{ color: "var(--muted)" }}>
+                {t("settings.account.lastBackup")}: {fmtDateTime(lastBackupAt, "-")}
+              </div>
+              <div style={{ color: "var(--muted)" }}>
+                {t("settings.account.lastRestore")}: {fmtDateTime(lastRestoreAt, "-")}
+              </div>
+              <div style={{ color: "var(--muted)" }}>
+                {t("settings.account.cloudCounts")}: {cloudCountsText}
+                {latestUpdatedAt ? ` (${fmtDateTime(latestUpdatedAt, "-")})` : ""}
+              </div>
+            </div>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button
                 type="button"
-                disabled
+                onClick={() => void handleBackup()}
+                disabled={!canRunVaultActions}
                 style={{
                   padding: "10px 12px",
                   borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--muted)",
-                  cursor: "not-allowed",
+                  border: "1px solid rgba(255,59,59,0.35)",
+                  background: "rgba(255,59,59,0.1)",
+                  color: "rgb(246,198,198)",
+                  cursor: canRunVaultActions ? "pointer" : "not-allowed",
                   fontWeight: 900,
-                  opacity: 0.6,
+                  opacity: canRunVaultActions ? 1 : 0.55,
                 }}
               >
-                {t("settings.account.backupNow")}
+                {vaultBusy === "backup" ? t("settings.account.backupInProgress") : t("settings.account.backupNow")}
               </button>
               <button
                 type="button"
-                disabled
+                onClick={() => void handleRestore()}
+                disabled={!canRunVaultActions}
                 style={{
                   padding: "10px 12px",
                   borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--muted)",
-                  cursor: "not-allowed",
+                  border: "1px solid rgba(255,59,59,0.65)",
+                  background: "rgba(255,59,59,0.12)",
+                  color: "rgb(255,201,201)",
+                  cursor: canRunVaultActions ? "pointer" : "not-allowed",
                   fontWeight: 900,
-                  opacity: 0.6,
+                  opacity: canRunVaultActions ? 1 : 0.55,
                 }}
               >
-                {t("settings.account.restore")}
+                {vaultBusy === "restore" ? t("settings.account.restoreInProgress") : t("settings.account.restore")}
               </button>
             </div>
           </div>

@@ -7,6 +7,8 @@ export const LS_KEYS = {
   meals_v1: "forge:meals_v1",
   sleep_v1: "forge:sleep_v1",
   templates: "forge_templates_v1",
+  cloudLastBackupAt: "forge:cloud_last_backup_at_v1",
+  cloudLastRestoreAt: "forge:cloud_last_restore_at_v1",
 
   // UI state
   active_tab_v1: "forge:active_tab_v1",
