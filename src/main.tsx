@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
 import "./index.css";
 import App from "./App.tsx";
+import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
 
 console.log("FORGE MAIN LOADED");
 const hasWindow = typeof window !== "undefined";
@@ -89,6 +90,6 @@ if (hasNavigator && "serviceWorker" in navigator) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    {hasWindow && window.location.pathname === "/auth/callback" ? <AuthCallbackPage /> : <App />}
   </StrictMode>
 );
