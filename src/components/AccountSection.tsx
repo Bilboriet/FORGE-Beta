@@ -14,6 +14,23 @@ function fmtDateTime(iso: string | null, fallback: string) {
   }
 }
 
+function toErrorMessage(err: unknown) {
+  if (err && typeof err === "object" && "message" in err) {
+    const msg = (err as { message?: unknown }).message;
+    return typeof msg === "string" && msg.trim() ? msg : "unknown";
+  }
+  return "unknown";
+}
+
+function isRateLimited(err: unknown) {
+  const status =
+    err && typeof err === "object" && "status" in err
+      ? (err as { status?: unknown }).status
+      : undefined;
+  const message = toErrorMessage(err).toLowerCase();
+  return status === 429 || message.includes("rate");
+}
+
 export default function AccountSection() {
   const t = useT();
   const { user, loading, error } = useSupabaseAuth();
@@ -90,9 +107,22 @@ export default function AccountSection() {
             typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
         },
       });
-      setStatus(signInError ? t("settings.account.error") : t("settings.account.sent"));
-    } catch {
-      setStatus(t("settings.account.error"));
+      if (signInError) {
+        const msg = toErrorMessage(signInError);
+        if (isRateLimited(signInError)) {
+          setStatus(`${t("settings.account.rateLimited")}: ${msg}`);
+        } else {
+          setStatus(`${t("settings.account.error")}: ${msg}`);
+        }
+      } else {
+        setStatus(t("settings.account.sent"));
+      }
+    } catch (err) {
+      if (isRateLimited(err)) {
+        setStatus(`${t("settings.account.rateLimited")}: ${toErrorMessage(err)}`);
+      } else {
+        setStatus(`${t("settings.account.error")}: ${toErrorMessage(err)}`);
+      }
     } finally {
       setAuthBusy(false);
     }
