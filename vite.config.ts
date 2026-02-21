@@ -4,6 +4,10 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    // Current app bundle is intentionally large; avoid noisy non-blocking warning in CI logs.
+    chunkSizeWarningLimit: 900,
+  },
   plugins: [
     react(),
     VitePWA({

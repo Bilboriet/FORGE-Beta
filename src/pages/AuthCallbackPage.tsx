@@ -6,6 +6,7 @@ import { supabase } from "../lib/supabaseClient";
 export default function AuthCallbackPage() {
   const t = useT();
   const [failed, setFailed] = useState(false);
+  const [errorDetail, setErrorDetail] = useState<string>("");
 
   useEffect(() => {
     let cancelled = false;
@@ -13,6 +14,7 @@ export default function AuthCallbackPage() {
     async function run() {
       if (!supabase) {
         setFailed(true);
+        setErrorDetail("Supabase not configured");
         return;
       }
 
@@ -47,8 +49,15 @@ export default function AuthCallbackPage() {
         setTimeout(() => {
           window.location.assign("/");
         }, 300);
-      } catch {
-        if (!cancelled) setFailed(true);
+      } catch (err) {
+        if (!cancelled) {
+          setFailed(true);
+          const detail =
+            err && typeof err === "object" && "message" in err
+              ? String((err as { message?: unknown }).message ?? "unknown")
+              : "unknown";
+          setErrorDetail(detail);
+        }
       }
     }
 
@@ -82,6 +91,11 @@ export default function AuthCallbackPage() {
         <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.35 }}>
           {failed ? t("settings.auth.failed") : t("settings.auth.secureConnection")}
         </p>
+        {failed && errorDetail ? (
+          <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.3, fontSize: 12 }}>
+            {t("settings.auth.detail")}: {errorDetail}
+          </p>
+        ) : null}
 
         {failed ? (
           <button
