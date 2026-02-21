@@ -5,6 +5,7 @@ import { useForgeSettings, LS_SETTINGS } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
 import { LS_KEYS } from "../constants";
 import { CollapsibleSection } from "../components/ui/CollapsibleSection";
+import AccountSection from "../components/AccountSection";
 
 
 const LS_ANALYTICS_EX = "forge:analytics_exercise_v1";
@@ -534,6 +535,7 @@ return (
     <div className="forgePage">
       {appPrefs}
       {statusBlock}
+      <AccountSection />
       {feedbackBlock}
       {appInfoBlock}
       {dataToolsBlock}
