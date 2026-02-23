@@ -1,0 +1,51 @@
+warning: in the working copy of 'src/styles/components.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'vite.config.ts', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/public/icons/apple-touch-icon.png b/public/icons/apple-touch-icon.png[m
+[1mindex 288ece6..bdc8a27 100644[m
+Binary files a/public/icons/apple-touch-icon.png and b/public/icons/apple-touch-icon.png differ
+[1mdiff --git a/public/icons/favicon-32.png b/public/icons/favicon-32.png[m
+[1mindex 288ece6..75c7a82 100644[m
+Binary files a/public/icons/favicon-32.png and b/public/icons/favicon-32.png differ
+[1mdiff --git a/public/icons/icon-192-maskable.png b/public/icons/icon-192-maskable.png[m
+[1mindex 288ece6..617ff40 100644[m
+Binary files a/public/icons/icon-192-maskable.png and b/public/icons/icon-192-maskable.png differ
+[1mdiff --git a/public/icons/icon-192.png b/public/icons/icon-192.png[m
+[1mindex 288ece6..8d97e3d 100644[m
+Binary files a/public/icons/icon-192.png and b/public/icons/icon-192.png differ
+[1mdiff --git a/public/icons/icon-512-maskable.png b/public/icons/icon-512-maskable.png[m
+[1mindex 288ece6..98141d6 100644[m
+Binary files a/public/icons/icon-512-maskable.png and b/public/icons/icon-512-maskable.png differ
+[1mdiff --git a/public/icons/icon-512.png b/public/icons/icon-512.png[m
+[1mindex 288ece6..f035f9c 100644[m
+Binary files a/public/icons/icon-512.png and b/public/icons/icon-512.png differ
+[1mdiff --git a/src/styles/components.css b/src/styles/components.css[m
+[1mindex 1c7ea45..bb53e8a 100644[m
+[1m--- a/src/styles/components.css[m
+[1m+++ b/src/styles/components.css[m
+[36m@@ -583,7 +583,7 @@[m [mbutton {[m
+   background-color: #171a21;[m
+   background-image: url("../assets/headertexture.png");[m
+   background-size: cover;[m
+[31m-  background-position: center calc(100% + 80px);[m
+[32m+[m[32m  background-position: center calc(100% + 80px - 1cm);[m
+   background-repeat: no-repeat;[m
+   box-shadow:[m
+     0 1px 0 rgba(255, 255, 255, 0.09) inset,[m
+[1mdiff --git a/vite.config.ts b/vite.config.ts[m
+[1mindex bc730e4..f8d7ef4 100644[m
+[1m--- a/vite.config.ts[m
+[1m+++ b/vite.config.ts[m
+[36m@@ -36,13 +36,11 @@[m [mexport default defineConfig({[m
+             src: "/icons/icon-192.png",[m
+             sizes: "192x192",[m
+             type: "image/png",[m
+[31m-            purpose: "any",[m
+           },[m
+           {[m
+             src: "/icons/icon-512.png",[m
+             sizes: "512x512",[m
+             type: "image/png",[m
+[31m-            purpose: "any",[m
+           },[m
+           {[m
+             src: "/icons/icon-192-maskable.png",[m
