@@ -582,7 +582,7 @@ button {
   background-color: #171a21;
   background-image: url("../assets/headertexture.png");
   background-size: cover;
-  background-position: center calc(100% + 16px);
+  background-position: center calc(100% + 32px);
   background-repeat: no-repeat;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.09) inset,
