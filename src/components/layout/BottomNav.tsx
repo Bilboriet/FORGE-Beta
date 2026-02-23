@@ -52,53 +52,8 @@ export function BottomNav({
   }, [active]);
 
   return (
-    <nav className="forge-bottom-nav">
-      <div className="forge-bottom-nav__edge forge-bottom-nav__edge--left" />
-      <div className="forge-bottom-nav__edge forge-bottom-nav__edge--right" />
-      <style>{`
-        .bottom-nav-scroll::-webkit-scrollbar { display: none; }
-      `}</style>
-      <div style={{ position: "relative" }}>
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 18,
-            pointerEvents: "none",
-            background:
-              "linear-gradient(90deg, rgba(11,11,15,0.92), rgba(11,11,15,0))",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 18,
-            pointerEvents: "none",
-            background:
-              "linear-gradient(270deg, rgba(11,11,15,0.92), rgba(11,11,15,0))",
-          }}
-        />
-        <div
-        className="bottom-nav-scroll"
-        ref={scrollRef}
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          display: "flex",
-          gap: 8,
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-          paddingInline: 6,
-        }}
-      >
+    <nav className="forge-bottomnav">
+      <div className="forge-bottomnav__inner" ref={scrollRef}>
         {tabs.map((tab) => {
           const isActive = tab.key === active;
           return (
@@ -117,13 +72,8 @@ export function BottomNav({
                 }
                 onChange(tab.key);
               }}
-              style={{
-                padding: "10px 10px",
-                minWidth: 96,
-                flexShrink: 0,
-                whiteSpace: "nowrap",
-              }}
-              className={`forge-btn forge-btn--sm ${isActive ? "forge-btn--hot" : "forge-btn--metal"}`}
+              aria-current={isActive ? "page" : undefined}
+              className={`forge-tab ${isActive ? "forge-tab--hot" : "forge-tab--cold"}`}
             >
               <span
                 style={{
@@ -140,19 +90,7 @@ export function BottomNav({
                 {hasDraft && tab.key === "logg" && (
                   <span
                     title={tr("nav.draft.title")}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "2px 6px",
-                      borderRadius: 999,
-                      fontSize: 11,
-                      fontWeight: 900,
-                      border: "1px solid var(--border)",
-                      background: "rgba(255,255,255,0.08)",
-                      color: "var(--text)",
-                      whiteSpace: "nowrap",
-                    }}
+                    className="forge-bottomnav__draft"
                   >
                     {tr("nav.draft.badge")}
                   </span>
@@ -161,7 +99,6 @@ export function BottomNav({
             </button>
           );
         })}
-        </div>
       </div>
     </nav>
   );
