@@ -1,0 +1,20 @@
+[33m9f5e362[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mbackup/before-history-rewrite[m[33m)[m Build OK: PWA generateSW precache populated
+[33mc653c63[m Checkpoint: restore correct UI/base after folder confusion
+[33m6f852c0[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m Fix auth callback + account UX
+[33mc6b9815[m Auth callback fix (magic link login)
+[33m47b2ea4[m Forge Account UX v1 (Supabase foundation)
+[33m4c38e5a[m git config --global core.pager catMerge branch 'dev'
+[33madef629[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m Fix settings/i18n + SW revision
+[33m5c514a0[m Fix PWA installability + icon
+[33md9b45ae[m Update PWA icon
+[33m8d85c74[m FORGE Beta: initial commit
+[33m9f5e362[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mbackup/before-history-rewrite[m[33m)[m Build OK: PWA generateSW precache populated
+[33mc653c63[m Checkpoint: restore correct UI/base after folder confusion
+[33m6f852c0[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m Fix auth callback + account UX
+[33mc6b9815[m Auth callback fix (magic link login)
+[33m47b2ea4[m Forge Account UX v1 (Supabase foundation)
+[33m4c38e5a[m git config --global core.pager catMerge branch 'dev'
+[33madef629[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m Fix settings/i18n + SW revision
+[33m5c514a0[m Fix PWA installability + icon
+[33md9b45ae[m Update PWA icon
+[33m8d85c74[m FORGE Beta: initial commit

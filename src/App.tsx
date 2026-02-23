@@ -149,7 +149,6 @@ export default function App() {
           <div className="forge-logo-wrap">
             <img src={forgeLogo} alt="FORGE" className="forge-logo-img" />
           </div>
-          <span className="forgeBrandSub">V1</span>
         </div>
       </header>
 
