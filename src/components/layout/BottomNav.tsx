@@ -52,26 +52,9 @@ export function BottomNav({
   }, [active]);
 
   return (
-    <nav
-      style={{
-                minWidth: 78,
-                flexShrink: 0,
-        position: "fixed",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        pointerEvents: "auto",
-        height: 72,
-        borderTop: "1px solid var(--border)",
-        background: "rgba(11,11,15,0.92)",
-        backdropFilter: "blur(10px)",
-        padding: 10,
-        paddingBottom: `calc(10px + env(safe-area-inset-bottom))`,
-        zIndex: 1000,
-      }}
-    >
-      <div style={{ pointerEvents: "none", position: "absolute", left: 0, top: 0, bottom: 0, width: 24, background: "linear-gradient(to right, rgba(11,11,15,0.95), rgba(11,11,15,0))" }} />
-      <div style={{ pointerEvents: "none", position: "absolute", right: 0, top: 0, bottom: 0, width: 24, background: "linear-gradient(to left, rgba(11,11,15,0.95), rgba(11,11,15,0))" }} />
+    <nav className="forge-bottom-nav">
+      <div className="forge-bottom-nav__edge forge-bottom-nav__edge--left" />
+      <div className="forge-bottom-nav__edge forge-bottom-nav__edge--right" />
       <style>{`
         .bottom-nav-scroll::-webkit-scrollbar { display: none; }
       `}</style>
@@ -135,20 +118,12 @@ export function BottomNav({
                 onChange(tab.key);
               }}
               style={{
-padding: "10px 10px",
-                borderRadius: 12,
-                border: "1px solid var(--border)",
-                background: isActive
-                  ? "var(--redSoft)"
-                  : "rgba(255,255,255,0.04)",
-                color: isActive ? "var(--forge-red)" : "var(--text)",
-                boxShadow: isActive
-                  ? "var(--forge-glow-tight)"
-                  : "none",
-                cursor: "pointer",
-                fontWeight: 900,
+                padding: "10px 10px",
+                minWidth: 96,
+                flexShrink: 0,
                 whiteSpace: "nowrap",
-}}
+              }}
+              className={`forge-btn forge-btn--sm ${isActive ? "forge-btn--hot" : "forge-btn--metal"}`}
             >
               <span
                 style={{
@@ -174,7 +149,7 @@ padding: "10px 10px",
                       fontSize: 11,
                       fontWeight: 900,
                       border: "1px solid var(--border)",
-                      background: "rgba(255,255,255,0.06)",
+                      background: "rgba(255,255,255,0.08)",
                       color: "var(--text)",
                       whiteSpace: "nowrap",
                     }}

@@ -6,6 +6,7 @@ import { useT } from "../hooks/useT";
 import { LS_KEYS } from "../constants";
 import { CollapsibleSection } from "../components/ui/CollapsibleSection";
 import AccountSection from "../components/AccountSection";
+import { ForgeButton } from "../components/ui/ForgeButton";
 
 
 const LS_ANALYTICS_EX = "forge:analytics_exercise_v1";
@@ -58,37 +59,21 @@ function Button({
   disabled?: boolean;
   title?: string;
 }) {
-  const base: React.CSSProperties = {
-    padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.04)",
-    color: "var(--text)",
-    cursor: disabled ? "not-allowed" : "pointer",
-    fontWeight: 900,
-    opacity: disabled ? 0.55 : 1,
-  };
-
-  const primary: React.CSSProperties = {
-    ...base,
-    border: "1px solid rgba(255,59,59,0.55)",
-    background: "var(--redSoft)",
-    color: "var(--red)",
-  };
-
-  const danger: React.CSSProperties = {
-    ...base,
-    border: "1px solid rgba(255,59,59,0.65)",
-    background: "rgba(255,59,59,0.12)",
-    color: "rgb(255,59,59)",
-  };
-
-  const style = variant === "primary" ? primary : variant === "danger" ? danger : base;
-
+  const styleClass =
+    variant === "primary"
+      ? "forge-btn--hot"
+      : variant === "danger"
+      ? "forge-btn--danger"
+      : "forge-btn--metal";
   return (
-    <button type="button" onClick={onClick} disabled={!!disabled} title={title} style={style}>
+    <ForgeButton
+      onClick={onClick}
+      disabled={!!disabled}
+      title={title}
+      className={styleClass}
+    >
       {children}
-    </button>
+    </ForgeButton>
   );
 }
 
@@ -109,15 +94,7 @@ function SelectRow({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          padding: "10px 12px",
-          borderRadius: 12,
-          border: "1px solid var(--border)",
-          background: "rgba(0,0,0,0.25)",
-          color: "var(--text)",
-          fontWeight: 900,
-          outline: "none",
-        }}
+        className="forge-select"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>

@@ -390,15 +390,9 @@ export function WidgetBoard({
                   <button
                     key={p.id}
                     onClick={() => applyPreset(p)}
+                    className="forge-chip forge-chip--inactive"
                     style={{
-                      borderRadius: 999,
-                      padding: "6px 10px",
-                      border: "1px solid var(--border)",
-                      background: "rgba(255,255,255,0.04)",
-                      color: "var(--text)",
-                      cursor: "pointer",
-                      fontWeight: 800,
-                      fontSize: 12,
+                      minHeight: 30,
                     }}
                     title={p.label}
                   >
@@ -412,15 +406,9 @@ export function WidgetBoard({
 
         <button
           onClick={toggleCustomize}
+          className={`forge-chip ${showCustomize ? "forge-chip--active" : "forge-chip--inactive"}`}
           style={{
-            borderRadius: 999,
-            padding: "6px 10px",
-            border: "1px solid var(--border)",
-            background: showCustomize ? "rgba(255,0,0,0.20)" : "rgba(255,255,255,0.04)",
-            color: "var(--text)",
-            cursor: "pointer",
-            fontWeight: 900,
-            fontSize: 12,
+            minHeight: 30,
             whiteSpace: "nowrap",
           }}
           title={t("widgets.customize.hint")}
@@ -433,21 +421,15 @@ export function WidgetBoard({
       {isMobile ? (
         <button
           onClick={toggleCustomize}
+          className={`forge-btn forge-btn--sm ${showCustomize ? "forge-btn--hot" : "forge-btn--metal"}`}
           style={{
             position: "fixed",
             right: 16,
             bottom: 84, // above bottom nav
             zIndex: 50,
+            minHeight: 40,
+            padding: "0 14px",
             borderRadius: 999,
-            padding: "10px 14px",
-            border: "1px solid var(--border)",
-            background: showCustomize ? "rgba(255,0,0,0.24)" : "rgba(0,0,0,0.55)",
-            color: "var(--text)",
-            cursor: "pointer",
-            fontWeight: 950,
-            fontSize: 13,
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
           }}
           aria-label={showCustomize ? t("widgets.customize.doneAria") : t("widgets.customize.aria")}
           title={showCustomize ? t("common.done") : t("common.customize")}
@@ -476,15 +458,9 @@ export function WidgetBoard({
               <button
                 key={d.id}
                 onClick={() => patch(d.id, { hidden: false })}
+                className="forge-chip forge-chip--inactive"
                 style={{
-                  borderRadius: 999,
-                  padding: "6px 10px",
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--text)",
-                  cursor: "pointer",
-                  fontWeight: 800,
-                  fontSize: 12,
+                  minHeight: 30,
                 }}
               >
                 + {d.title}

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForgeSettings } from "../../hooks/useForgeSettings";
 import { useT } from "../../hooks/useT";
 import type { HeatmapDay } from "../../utils/consistency";
+import { ForgeChip } from "../ui/ForgeChip";
 
 type Range = 30 | 90 | 180;
 
@@ -198,22 +199,13 @@ export function ConsistencyHeatmap({ days, range, onRangeChange, showSessionDot 
             const rr = r as Range;
             const isOn = rr === range;
             return (
-              <button
+              <ForgeChip
                 key={r}
-                type="button"
                 onClick={() => onRangeChange(rr)}
-                style={{
-                  borderRadius: 999,
-                  padding: "6px 10px",
-                  border: "1px solid var(--border)",
-                  background: isOn ? "rgba(220,38,38,0.25)" : "rgba(255,255,255,0.04)",
-                  color: "var(--text)",
-                  fontWeight: 900,
-                  fontSize: 12,
-                }}
+                active={isOn}
               >
                 {t(rangeKey(rr))}
-              </button>
+              </ForgeChip>
             );
           })}
         </div>

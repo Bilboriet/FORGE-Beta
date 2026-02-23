@@ -22,6 +22,7 @@ import { MiniLineChart } from "../components/charts/MiniLineChart";
 import { CoachCard } from "../components/ui/CoachCard";
 import { WidgetBoard } from "../components/layout/WidgetBoard";
 import { formatLoadCompactFromKg, formatWeightFromKg, unitLabel } from "../units";
+import { ForgeButton } from "../components/ui/ForgeButton";
 
 const LS_ANALYTICS_EX = "forge:analytics_exercise_v1";
 const DEBUG_ANALYTICS = false;
@@ -507,17 +508,7 @@ export default function AnalyticsPage() {
             value={exerciseQuery}
             onChange={(e) => setExerciseQuery(e.target.value)}
             placeholder={t("analytics.section.strength.searchPlaceholder")}
-            style={{
-              width: "100%",
-              borderRadius: 10,
-              padding: "8px 10px",
-              border: "1px solid var(--border)",
-              background: "rgba(0,0,0,0.26)",
-              color: "var(--text)",
-              fontWeight: 700,
-              fontSize: 12,
-              outline: "none",
-            }}
+            className="forge-input"
           />
           <select
             value={selectedExerciseId ?? ""}
@@ -534,16 +525,7 @@ export default function AnalyticsPage() {
                 });
               }
             }}
-            style={{
-              width: "100%",
-              borderRadius: 10,
-              padding: "8px 10px",
-              border: "1px solid var(--border)",
-              background: "rgba(0,0,0,0.26)",
-              color: "var(--text)",
-              fontWeight: 800,
-              fontSize: 12,
-            }}
+            className="forge-select"
           >
             <option value="">{t("analytics.section.strength.selectPlaceholder")}</option>
             {exerciseOptions.map((ex) => (
@@ -657,23 +639,15 @@ export default function AnalyticsPage() {
           </div>
           {muscleVolume.length > 8 ? (
             <div>
-              <button
-                type="button"
+              <ForgeButton
                 onClick={() => setShowAllMuscles((v) => !v)}
-                style={{
-                  borderRadius: 10,
-                  padding: "8px 10px",
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--text)",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                }}
+                className="forge-btn--metal"
+                size="sm"
               >
                 {showAllMuscles
                   ? t("analytics.section.balance.showLess")
                   : t("analytics.section.balance.showAll")}
-              </button>
+              </ForgeButton>
             </div>
           ) : null}
         </div>

@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { EXERCISE_LIBRARY } from "../exerciseLibrary";
 import { ExercisePickerModal } from "../components/ui/ExercisePickerModal";
+import { ForgeButton } from "../components/ui/ForgeButton";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useForgeSettings } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
@@ -752,15 +753,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 type="time"
                 value={sleepBedtime}
                 onChange={(e) => setSleepBedtime(e.target.value)}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "rgba(0,0,0,0.25)",
-                  color: "var(--text)",
-                  fontWeight: 900,
-                  outline: "none",
-                }}
+                className="forge-input"
               />
             </div>
 
@@ -770,15 +763,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 type="time"
                 value={sleepWakeTime}
                 onChange={(e) => setSleepWakeTime(e.target.value)}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "rgba(0,0,0,0.25)",
-                  color: "var(--text)",
-                  fontWeight: 900,
-                  outline: "none",
-                }}
+                className="forge-input"
               />
             </div>
           </div>
@@ -788,15 +773,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
             <select
               value={sleepQuality}
               onChange={(e) => setSleepQuality(e.target.value)}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid var(--border)",
-                background: "rgba(0,0,0,0.25)",
-                color: "var(--text)",
-                fontWeight: 900,
-                outline: "none",
-              }}
+              className="forge-select"
             >
               <option value="">—</option>
               <option value="1">1 ({t("sleep.quality.bad")})</option>
@@ -928,14 +905,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
               type="date"
               value={workout.date}
               onChange={(e) => setWorkout({ ...workout, date: e.target.value })}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
-                color: "var(--text)",
-              }}
+              className="forge-input"
             />
           </div>
 
@@ -948,14 +918,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
               placeholder={t("log.field.titlePlaceholder")}
               value={workout.title ?? ""}
               onChange={(e) => setWorkout({ ...workout, title: e.target.value })}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
-                color: "var(--text)",
-              }}
+              className="forge-input"
             />
           </div>
         </div>
@@ -967,35 +930,19 @@ function addExerciseBlock(exercise: ExerciseRef) {
           </div>
 
           <div style={{ position: "relative", display: "flex", gap: 8, alignItems: "center" }}>
-            <button
+            <ForgeButton
               onClick={openSaveAsTemplateModal}
               disabled={(workout.exercises ?? []).length === 0}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.05)",
-                color: (workout.exercises ?? []).length > 0 ? "var(--text)" : "var(--muted)",
-                cursor: (workout.exercises ?? []).length > 0 ? "pointer" : "not-allowed",
-                fontWeight: 700,
-              }}
+              className="forge-btn--metal"
             >
               Save as template
-            </button>
-            <button
+            </ForgeButton>
+            <ForgeButton
               onClick={saveWorkout}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "1px solid rgba(255,59,59,0.55)",
-                background: "var(--redSoft)",
-                color: "var(--red)",
-                cursor: "pointer",
-                fontWeight: 700,
-              }}
+              className="forge-btn--hot"
             >
               {t("log.saveWorkout")}
-            </button>
+            </ForgeButton>
 
             {savePRBadgeCount > 0 && (
               <div
@@ -1038,19 +985,12 @@ function addExerciseBlock(exercise: ExerciseRef) {
       >
         <label style={{ color: "var(--muted)" }}>{t("log.addExerciseLabel")}</label>
 
-        <button
+        <ForgeButton
           onClick={() => setPickerOpen(true)}
-          style={{
-            padding: "10px 12px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.06)",
-            color: "var(--text)",
-            cursor: "pointer",
-          }}
+          className="forge-btn--metal"
         >
           {t("picker.title")}
-        </button>
+        </ForgeButton>
         {pickedExercise ? (
           <div style={{ color: "var(--muted)" }}>
             {t("log.selected")}:{" "}
@@ -1060,23 +1000,15 @@ function addExerciseBlock(exercise: ExerciseRef) {
           <div style={{ color: "var(--muted)" }}>{t("log.noneSelected")}</div>
         )}
 
-        <button
+        <ForgeButton
           onClick={() => {
             if (!pickedExercise) return;
             addExerciseBlock(pickedExercise);
           }}
-          style={{
-            padding: "10px 12px",
-            borderRadius: 12,
-            border: "1px solid rgba(255,59,59,0.55)",
-            background: "var(--redSoft)",
-            color: "var(--red)",
-            cursor: "pointer",
-            fontWeight: 700,
-          }}
+          className="forge-btn--hot"
         >
           + {t("log.add")}
-        </button>
+        </ForgeButton>
       </div>
 
       <ExercisePickerModal
@@ -1166,13 +1098,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
                             return { ...prev, [s.id]: next };
                           });
                           updateSet(block.id, s.id, { reps: cleaned === "" ? 0 : Number(cleaned) });
-                        }}style={{
-                          padding: "10px 12px",
-                          borderRadius: 12,
-                          border: "1px solid var(--border)",
-                          background: "rgba(255,255,255,0.04)",
-                          color: "var(--text)",
                         }}
+                        className="forge-input"
                         aria-label={t("log.reps")}
                       />
 
@@ -1199,48 +1126,28 @@ function addExerciseBlock(exercise: ExerciseRef) {
                             return { ...prev, [s.id]: next };
                           });
                           updateSet(block.id, s.id, { weightKg: cleaned === "" ? 0 : (parseWeightInputToKg(cleaned, units) ?? 0) });
-                        }}style={{
-                          padding: "10px 12px",
-                          borderRadius: 12,
-                          border: "1px solid var(--border)",
-                          background: "rgba(255,255,255,0.04)",
-                          color: "var(--text)",
                         }}
+                        className="forge-input"
                         aria-label={unitLabel(units).toUpperCase()}
                       />
 
-                      <button
+                      <ForgeButton
                         onClick={() => removeSet(block.id, s.id)}
-                        style={{
-                          padding: "10px 12px",
-                          borderRadius: 12,
-                          border: "1px solid var(--border)",
-                          background: "rgba(255,255,255,0.04)",
-                          color: "var(--muted)",
-                          cursor: "pointer",
-                        }}
+                        className="forge-btn--subtle"
                       >
                         {t("log.delete")}
-                      </button>
+                      </ForgeButton>
                     </div>
                   ))
                 )}
 
                 <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
-                  <button
+                  <ForgeButton
                     onClick={() => addSet(block.id)}
-                    style={{
-                      padding: "10px 12px",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,59,59,0.55)",
-                      background: "var(--redSoft)",
-                      color: "var(--red)",
-                      cursor: "pointer",
-                      fontWeight: 700,
-                    }}
+                    className="forge-btn--hot"
                   >
                     + {t("log.addSet")}
-                  </button>
+                  </ForgeButton>
                 </div>
 
                 <div style={{ marginTop: 6, color: "var(--muted)", fontSize: 13 }}>
@@ -1260,20 +1167,13 @@ function addExerciseBlock(exercise: ExerciseRef) {
     <div className="forge-surface forgeCardInner" style={{ marginTop: 16, display: "grid", gap: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
         <div className="section-title">TEMPLATES</div>
-        <button
+        <ForgeButton
           onClick={openNewTemplateModal}
-          style={{
-            padding: "8px 10px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.05)",
-            color: "var(--text)",
-            cursor: "pointer",
-            fontWeight: 800,
-          }}
+          className="forge-btn--metal"
+          size="sm"
         >
           New template
-        </button>
+        </ForgeButton>
       </div>
 
       {templates.length === 0 ? (

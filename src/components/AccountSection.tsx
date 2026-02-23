@@ -4,6 +4,7 @@ import { useSupabaseAuth } from "../hooks/useSupabaseAuth";
 import { useT } from "../hooks/useT";
 import { backupToCloud, getCloudSummary, restoreFromCloud } from "../lib/cloudVault";
 import { supabase } from "../lib/supabaseClient";
+import { ForgeButton } from "./ui/ForgeButton";
 
 function fmtDateTime(iso: string | null, fallback: string) {
   if (!iso) return fallback;
@@ -250,33 +251,15 @@ export default function AccountSection() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("settings.account.emailPlaceholder")}
             autoComplete="email"
-            style={{
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: "1px solid var(--border)",
-              background: "rgba(0,0,0,0.25)",
-              color: "var(--text)",
-              fontWeight: 700,
-              outline: "none",
-            }}
+            className="forge-input"
           />
-          <button
-            type="button"
+          <ForgeButton
             onClick={() => void sendLink()}
             disabled={authBusy || !email.trim()}
-            style={{
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: "1px solid rgba(255,59,59,0.35)",
-              background: "rgba(255,59,59,0.1)",
-              color: "rgb(246,198,198)",
-              cursor: authBusy || !email.trim() ? "not-allowed" : "pointer",
-              fontWeight: 900,
-              opacity: authBusy || !email.trim() ? 0.55 : 1,
-            }}
+            className="forge-btn--hot"
           >
             {t("settings.account.sendLink")}
-          </button>
+          </ForgeButton>
           <small style={{ color: "var(--muted)", lineHeight: 1.3 }}>
             {t("settings.account.magicLinkHint")}
           </small>
@@ -288,23 +271,13 @@ export default function AccountSection() {
           <p style={{ margin: 0, color: "var(--text)" }}>
             {t("settings.account.linkedAs")} {user.email}
           </p>
-          <button
-            type="button"
+          <ForgeButton
             onClick={() => void signOut()}
             disabled={authBusy || vaultBusy !== null}
-            style={{
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: "1px solid rgba(255,59,59,0.65)",
-              background: "rgba(255,59,59,0.12)",
-              color: "rgb(255,201,201)",
-              cursor: authBusy || vaultBusy !== null ? "not-allowed" : "pointer",
-              fontWeight: 900,
-              opacity: authBusy || vaultBusy !== null ? 0.55 : 1,
-            }}
+            className="forge-btn--danger"
           >
             {t("settings.account.signOut")}
-          </button>
+          </ForgeButton>
 
           <div
             style={{
@@ -339,40 +312,20 @@ export default function AccountSection() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <button
-                type="button"
+              <ForgeButton
                 onClick={() => void handleBackup()}
                 disabled={!canRunVaultActions}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,59,59,0.35)",
-                  background: "rgba(255,59,59,0.1)",
-                  color: "rgb(246,198,198)",
-                  cursor: canRunVaultActions ? "pointer" : "not-allowed",
-                  fontWeight: 900,
-                  opacity: canRunVaultActions ? 1 : 0.55,
-                }}
+                className="forge-btn--hot"
               >
                 {vaultBusy === "backup" ? t("settings.account.backupInProgress") : t("settings.account.backupNow")}
-              </button>
-              <button
-                type="button"
+              </ForgeButton>
+              <ForgeButton
                 onClick={() => void handleRestore()}
                 disabled={!canRunVaultActions}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,59,59,0.65)",
-                  background: "rgba(255,59,59,0.12)",
-                  color: "rgb(255,201,201)",
-                  cursor: canRunVaultActions ? "pointer" : "not-allowed",
-                  fontWeight: 900,
-                  opacity: canRunVaultActions ? 1 : 0.55,
-                }}
+                className="forge-btn--danger"
               >
                 {vaultBusy === "restore" ? t("settings.account.restoreInProgress") : t("settings.account.restore")}
-              </button>
+              </ForgeButton>
             </div>
           </div>
         </div>

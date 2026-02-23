@@ -8,6 +8,8 @@ import { LS_KEYS } from "../constants";
 import { estimate1RM, workoutVolume } from "../utils";
 import { scoreExerciseName } from "../utils/exerciseSearch";
 import { formatLoadCompactFromKg, formatWeightFromKg, parseWeightInputToKg, unitLabel } from "../units";
+import { ForgeButton } from "../components/ui/ForgeButton";
+import { ForgeChip } from "../components/ui/ForgeChip";
 
 const E1RM_MAX_REPS = 12;
 
@@ -138,41 +140,16 @@ function countSets(session: WorkoutSession): number {
   return n;
 }
 
-function SessionChip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "8px 12px",
-        borderRadius: 999,
-        border: active ? "1px solid rgba(255,59,59,0.35)" : "1px solid var(--border)",
-        background: active ? "rgba(255,59,59,0.14)" : "rgba(255,255,255,0.04)",
-        color: active ? "var(--red)" : "var(--text)",
-        fontWeight: active ? 900 : 800,
-        fontSize: 12,
-        cursor: "pointer",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
 function Pill({ children }: { children: ReactNode }) {
   return (
     <span
+      className="forge-chip forge-chip--inactive"
       style={{
         display: "inline-flex",
         alignItems: "center",
-        height: 22,
-        padding: "0 10px",
-        borderRadius: 999,
-        border: "1px solid var(--border)",
-        background: "rgba(255,255,255,0.04)",
-        color: "var(--text)",
-        fontSize: 12,
+        minHeight: 26,
         whiteSpace: "nowrap",
+        cursor: "default",
       }}
     >
       {children}
@@ -247,21 +224,13 @@ function SessionCard({
           </div>
         </div>
 
-        <button
+        <ForgeButton
           onClick={onOpen}
-          style={{
-            padding: "8px 10px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.04)",
-            color: "var(--text)",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            fontWeight: 800,
-          }}
+          size="sm"
+          className="forge-btn--metal"
         >
           {tr("history.action.open")}
-        </button>
+        </ForgeButton>
       </div>
 
       {/* Stats grid */}
@@ -291,36 +260,20 @@ function SessionCard({
 
       {/* Actions */}
       <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-        <button
+        <ForgeButton
           onClick={onEdit}
-          style={{
-            height: 32,
-            padding: "0 12px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.04)",
-            color: "var(--text)",
-            cursor: "pointer",
-            fontWeight: 900,
-          }}
+          size="sm"
+          className="forge-btn--metal"
         >
           {tr("history.action.edit")}
-        </button>
-        <button
+        </ForgeButton>
+        <ForgeButton
           onClick={onDelete}
-          style={{
-            height: 32,
-            padding: "0 12px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.04)",
-            color: "var(--red)",
-            cursor: "pointer",
-            fontWeight: 900,
-          }}
+          size="sm"
+          className="forge-btn--danger"
         >
           {tr("history.action.delete")}
-        </button>
+        </ForgeButton>
       </div>
     </div>
   );
@@ -560,10 +513,10 @@ export default function HistoryPage() {
     <div className="forgePage">
       {/* Range chips */}
       <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 2 }}>
-        <SessionChip active={range === "all"} label={tr("history.range.all")} onClick={() => setRange("all")} />
-        <SessionChip active={range === "30"} label={tr("history.range.30d")} onClick={() => setRange("30")} />
-        <SessionChip active={range === "90"} label={tr("history.range.90d")} onClick={() => setRange("90")} />
-        <SessionChip active={range === "180"} label={tr("history.range.180d")} onClick={() => setRange("180")} />
+        <ForgeChip active={range === "all"} onClick={() => setRange("all")}>{tr("history.range.all")}</ForgeChip>
+        <ForgeChip active={range === "30"} onClick={() => setRange("30")}>{tr("history.range.30d")}</ForgeChip>
+        <ForgeChip active={range === "90"} onClick={() => setRange("90")}>{tr("history.range.90d")}</ForgeChip>
+        <ForgeChip active={range === "180"} onClick={() => setRange("180")}>{tr("history.range.180d")}</ForgeChip>
       </div>
 
       {/* Exercise search */}
@@ -573,15 +526,10 @@ export default function HistoryPage() {
             value={exerciseQuery}
             onChange={(e) => setExerciseQuery(e.target.value)}
             placeholder={tr("history.search.placeholder")}
+            className="forge-input"
             style={{
               flex: 1,
               minWidth: 220,
-              padding: "12px 12px",
-              borderRadius: 14,
-              border: "1px solid var(--border)",
-              background: "rgba(255,255,255,0.04)",
-              color: "var(--text)",
-              outline: "none",
             }}
           />
 
@@ -591,34 +539,21 @@ export default function HistoryPage() {
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
               aria-label={tr("history.dateFilter.label")}
+              className="forge-input"
               style={{
-                padding: "12px 12px",
-                borderRadius: 14,
-                border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
-                color: "var(--text)",
-                outline: "none",
                 minWidth: 160,
               }}
             />
 
             {dateFilter ? (
-              <button
+              <ForgeButton
                 onClick={() => setDateFilter("")}
                 title={tr("history.dateFilter.clear")}
                 aria-label={tr("history.dateFilter.clear")}
-                style={{
-                  padding: "12px 12px",
-                  borderRadius: 14,
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.02)",
-                  color: "var(--text)",
-                  cursor: "pointer",
-                  userSelect: "none",
-                }}
+                className="forge-btn--subtle"
               >
                 {tr("history.dateFilter.clearShort")}
-              </button>
+              </ForgeButton>
             ) : null}
           </div>
         </div>
@@ -701,20 +636,13 @@ export default function HistoryPage() {
                 <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>{tr("history.detail.session")}</div>
                 <div style={{ fontWeight: 900, fontSize: 16 }}>{selected.title?.trim() ? selected.title : tr("history.defaultWorkoutTitle")}</div>
               </div>
-              <button
+              <ForgeButton
                 onClick={closeDetail}
-                style={{
-                  padding: "8px 10px",
-                  borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--text)",
-                  cursor: "pointer",
-                  fontWeight: 900,
-                }}
+                size="sm"
+                className="forge-btn--metal"
               >
                 {tr("history.action.close")}
-              </button>
+              </ForgeButton>
             </div>
 
             {/* Meta card */}
@@ -740,38 +668,24 @@ export default function HistoryPage() {
                 </div>
 
                 <div style={{ display: "flex", gap: 8 }}>
-                  <button
+                  <ForgeButton
                     onClick={() => {
                       setEditingMeta((v) => !v);
                       setEditingSet(null);
                     }}
-                    style={{
-                      padding: "8px 10px",
-                      borderRadius: 12,
-                      border: "1px solid var(--border)",
-                      background: "rgba(255,255,255,0.04)",
-                      color: "var(--text)",
-                      cursor: "pointer",
-                      fontWeight: 900,
-                    }}
+                    size="sm"
+                    className="forge-btn--metal"
                   >
                     {editingMeta ? tr("history.action.cancel") : tr("history.action.edit")}
-                  </button>
+                  </ForgeButton>
 
-                  <button
+                  <ForgeButton
                     onClick={() => deleteSession(selected.id)}
-                    style={{
-                      padding: "8px 10px",
-                      borderRadius: 12,
-                      border: "1px solid var(--border)",
-                      background: "rgba(255,255,255,0.04)",
-                      color: "var(--red)",
-                      cursor: "pointer",
-                      fontWeight: 900,
-                    }}
+                    size="sm"
+                    className="forge-btn--danger"
                   >
                     {tr("history.action.delete")}
-                  </button>
+                  </ForgeButton>
                 </div>
               </div>
 
@@ -786,15 +700,7 @@ export default function HistoryPage() {
                     <input
                       value={draftDate}
                       onChange={(e) => setDraftDate(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        borderRadius: 14,
-                        border: "1px solid var(--border)",
-                        background: "rgba(255,255,255,0.04)",
-                        color: "var(--text)",
-                        outline: "none",
-                      }}
+                      className="forge-input"
                     />
                   </div>
 
@@ -804,15 +710,7 @@ export default function HistoryPage() {
                       value={draftTitle}
                       onChange={(e) => setDraftTitle(e.target.value)}
                       placeholder={tr("history.field.titlePlaceholder")}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        borderRadius: 14,
-                        border: "1px solid var(--border)",
-                        background: "rgba(255,255,255,0.04)",
-                        color: "var(--text)",
-                        outline: "none",
-                      }}
+                      className="forge-input"
                     />
                   </div>
 
@@ -822,49 +720,27 @@ export default function HistoryPage() {
                       value={draftNote}
                       onChange={(e) => setDraftNote(e.target.value)}
                       rows={3}
+                      className="forge-textarea"
                       style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        borderRadius: 14,
-                        border: "1px solid var(--border)",
-                        background: "rgba(255,255,255,0.04)",
-                        color: "var(--text)",
-                        outline: "none",
                         resize: "vertical",
                       }}
                     />
                   </div>
 
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button
+                    <ForgeButton
                       onClick={updateSessionMeta}
-                      style={{
-                        padding: "10px 12px",
-                        borderRadius: 14,
-                        border: "1px solid rgba(255,59,59,0.35)",
-                        background: "rgba(255,59,59,0.16)",
-                        color: "var(--red)",
-                        cursor: "pointer",
-                        fontWeight: 900,
-                      }}
+                      className="forge-btn--hot"
                     >
                       {tr("history.action.save")}
-                    </button>
+                    </ForgeButton>
 
-                    <button
+                    <ForgeButton
                       onClick={() => setEditingMeta(false)}
-                      style={{
-                        padding: "10px 12px",
-                        borderRadius: 14,
-                        border: "1px solid var(--border)",
-                        background: "rgba(255,255,255,0.04)",
-                        color: "var(--text)",
-                        cursor: "pointer",
-                        fontWeight: 900,
-                      }}
+                      className="forge-btn--metal"
                     >
                       {tr("history.action.cancel")}
-                    </button>
+                    </ForgeButton>
                   </div>
                 </div>
               ) : null}
@@ -920,22 +796,13 @@ export default function HistoryPage() {
                               <span style={{ color: "var(--muted)", fontWeight: 800 }}>{tr("history.set.warmup")}</span>
                             ) : null}
                           </div>
-                          <button
+                          <ForgeButton
                             onClick={() => startEditSet(b.id, set)}
-                            style={{
-                              height: 32,
-                              padding: "0 12px",
-                              borderRadius: 12,
-                              border: "1px solid var(--border)",
-                              background: "rgba(255,255,255,0.04)",
-                              color: "var(--text)",
-                              cursor: "pointer",
-                              fontWeight: 900,
-                              whiteSpace: "nowrap",
-                            }}
+                            size="sm"
+                            className="forge-btn--metal"
                           >
                             {tr("history.action.edit")}
-                          </button>
+                          </ForgeButton>
                         </div>
                       );
 
@@ -967,15 +834,7 @@ export default function HistoryPage() {
                                     const kg = parseWeightInputToKg(e.target.value, units);
                                     setDraftWeightKg(kg ?? 0);
                                   }}
-                                  style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: 14,
-                                    border: "1px solid var(--border)",
-                                    background: "rgba(255,255,255,0.04)",
-                                    color: "var(--text)",
-                                    outline: "none",
-                                  }}
+                                  className="forge-input"
                                 />
                               </div>
 
@@ -985,15 +844,7 @@ export default function HistoryPage() {
                                   inputMode="numeric"
                                   value={String(draftReps)}
                                   onChange={(e) => setDraftReps(Number(e.target.value) || 0)}
-                                  style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: 14,
-                                    border: "1px solid var(--border)",
-                                    background: "rgba(255,255,255,0.04)",
-                                    color: "var(--text)",
-                                    outline: "none",
-                                  }}
+                                  className="forge-input"
                                 />
                               </div>
                             </div>
@@ -1004,15 +855,7 @@ export default function HistoryPage() {
                                 <select
                                   value={draftKind}
                                   onChange={(e) => setDraftKind(e.target.value as SetLog["kind"])}
-                                  style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: 14,
-                                    border: "1px solid var(--border)",
-                                    background: "rgba(255,255,255,0.04)",
-                                    color: "var(--text)",
-                                    outline: "none",
-                                  }}
+                                  className="forge-select"
                                 >
                                   <option value="work">{tr("history.editSet.kind.work")}</option>
                                   <option value="warmup">{tr("history.editSet.kind.warmup")}</option>
@@ -1026,15 +869,7 @@ export default function HistoryPage() {
                                   value={draftRir}
                                   onChange={(e) => setDraftRir(e.target.value)}
                                   placeholder={tr("history.value.optional")}
-                                  style={{
-                                    width: "100%",
-                                    padding: "10px 12px",
-                                    borderRadius: 14,
-                                    border: "1px solid var(--border)",
-                                    background: "rgba(255,255,255,0.04)",
-                                    color: "var(--text)",
-                                    outline: "none",
-                                  }}
+                                  className="forge-input"
                                 />
                               </div>
                             </div>
@@ -1046,48 +881,26 @@ export default function HistoryPage() {
                                 onChange={(e) => setDraftSetNote(e.target.value)}
                                 rows={2}
                                 placeholder={tr("history.value.optional")}
+                                className="forge-textarea"
                                 style={{
-                                  width: "100%",
-                                  padding: "10px 12px",
-                                  borderRadius: 14,
-                                  border: "1px solid var(--border)",
-                                  background: "rgba(255,255,255,0.04)",
-                                  color: "var(--text)",
-                                  outline: "none",
                                   resize: "vertical",
                                 }}
                               />
                             </div>
 
                             <div style={{ display: "flex", gap: 8 }}>
-                              <button
+                              <ForgeButton
                                 onClick={saveEditSet}
-                                style={{
-                                  padding: "10px 12px",
-                                  borderRadius: 14,
-                                  border: "1px solid rgba(255,59,59,0.35)",
-                                  background: "rgba(255,59,59,0.16)",
-                                  color: "var(--red)",
-                                  cursor: "pointer",
-                                  fontWeight: 900,
-                                }}
+                                className="forge-btn--hot"
                               >
                                 {tr("history.action.save")}
-                              </button>
-                              <button
+                              </ForgeButton>
+                              <ForgeButton
                                 onClick={cancelEditSet}
-                                style={{
-                                  padding: "10px 12px",
-                                  borderRadius: 14,
-                                  border: "1px solid var(--border)",
-                                  background: "rgba(255,255,255,0.04)",
-                                  color: "var(--text)",
-                                  cursor: "pointer",
-                                  fontWeight: 900,
-                                }}
+                                className="forge-btn--metal"
                               >
                                 {tr("history.action.cancel")}
-                              </button>
+                              </ForgeButton>
                             </div>
                           </div>
                         </div>

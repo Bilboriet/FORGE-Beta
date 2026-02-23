@@ -10,6 +10,7 @@ import { PieCard } from "../components/charts/PieCard";
 import type { PieSlice } from "../components/charts/MiniPieChart";
 import { MealLogModal } from "../components/ui/MealLogModal";
 import { WidgetBoard } from "../components/layout/WidgetBoard";
+import { ForgeButton } from "../components/ui/ForgeButton";
 
 /* ---------------------------------- types ---------------------------------- */
 
@@ -143,35 +144,15 @@ function PillButton({
   title?: string;
   variant?: "ghost" | "primary";
 }) {
-  const base: React.CSSProperties = {
-    padding: "10px 12px",
-    borderRadius: 999,
-    border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.04)",
-    color: "var(--text)",
-    cursor: disabled ? "not-allowed" : "pointer",
-    fontWeight: 900,
-    whiteSpace: "nowrap",
-    opacity: disabled ? 0.55 : 1,
-  };
-
-  const primary: React.CSSProperties = {
-    ...base,
-    border: "1px solid rgba(255,59,59,0.55)",
-    background: "var(--redSoft)",
-    color: "var(--red)",
-  };
-
   return (
-    <button
-      type="button"
+    <ForgeButton
       onClick={onClick}
       disabled={!!disabled}
       title={title}
-      style={variant === "primary" ? primary : base}
+      className={variant === "primary" ? "forge-btn--hot" : "forge-btn--metal"}
     >
       {children}
-    </button>
+    </ForgeButton>
   );
 }
 
@@ -215,17 +196,7 @@ function Field({
           onChange(clamp0(next));
         }}
         placeholder={placeholder ?? "0"}
-        style={{
-          width: "100%",
-          padding: "10px 12px",
-          borderRadius: 12,
-          border: "1px solid var(--border)",
-          background: "rgba(0,0,0,0.25)",
-          color: "var(--text)",
-          fontWeight: 900,
-          fontSize: 16,
-          outline: "none",
-        }}
+        className="forge-input"
       />
 
       {hint ? (
@@ -733,15 +704,7 @@ export function DietPage() {
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value || today)}
-          style={{
-            padding: "10px 12px",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            background: "rgba(0,0,0,0.25)",
-            color: "var(--text)",
-            fontWeight: 900,
-            outline: "none",
-          }}
+          className="forge-input"
         />
       </div>
     </div>

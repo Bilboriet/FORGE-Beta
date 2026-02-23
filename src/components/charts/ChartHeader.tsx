@@ -1,5 +1,6 @@
 // src/components/ChartHeader.tsx
 import type { MiniChartMode } from "./MiniLineChart";
+import { ForgeButton } from "../ui/ForgeButton";
 
 type Props = {
   title: string;
@@ -136,46 +137,20 @@ export function ChartHeader({
 
       {mode && onModeChange ? (
         <div style={{ display: "flex", gap: 6, flex: "0 0 auto" }}>
-          <button
-            type="button"
+          <ForgeButton
             onClick={() => onModeChange("line")}
-            style={{
-              height: 30,
-              padding: "0 10px",
-              borderRadius: 10,
-              border: "1px solid rgba(255,255,255,0.08)",
-              background:
-                mode === "line"
-                  ? "rgba(255,59,59,0.16)"
-                  : "rgba(255,255,255,0.03)",
-              color: "rgba(255,255,255,0.9)",
-              fontSize: 12,
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
+            className={mode === "line" ? "forge-btn--hot" : "forge-btn--metal"}
+            size="sm"
           >
             Line
-          </button>
-          <button
-            type="button"
+          </ForgeButton>
+          <ForgeButton
             onClick={() => onModeChange("bar")}
-            style={{
-              height: 30,
-              padding: "0 10px",
-              borderRadius: 10,
-              border: "1px solid rgba(255,255,255,0.08)",
-              background:
-                mode === "bar"
-                  ? "rgba(255,59,59,0.16)"
-                  : "rgba(255,255,255,0.03)",
-              color: "rgba(255,255,255,0.9)",
-              fontSize: 12,
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
+            className={mode === "bar" ? "forge-btn--hot" : "forge-btn--metal"}
+            size="sm"
           >
             Bars
-          </button>
+          </ForgeButton>
         </div>
       ) : null}
     </div>
