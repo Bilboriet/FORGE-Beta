@@ -82,7 +82,7 @@ export function BottomNav({
                   alignItems: "center",
                   gap: 6,
                   textShadow: isActive
-                    ? "var(--forge-glow-soft)"
+                    ? "0 0 4px rgba(181, 81, 57, 0.24)"
                     : "none",
                 }}
               >
