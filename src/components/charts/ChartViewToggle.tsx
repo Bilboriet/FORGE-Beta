@@ -26,7 +26,7 @@ export function ChartViewToggle({
     padding: dims.pad,
     borderRadius: 999,
     border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.04)",
+    background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.48) 100%), var(--surface)",
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     position: "relative",
@@ -43,8 +43,9 @@ export function ChartViewToggle({
     width: `calc(50% - ${dims.pad}px)`,
     height: `calc(100% - ${dims.pad * 2}px)`,
     borderRadius: 999,
-    border: "1px solid rgba(255,59,59,0.55)",
-    background: "var(--redSoft)",
+    border: "1px solid rgba(var(--accentHot-rgb),0.40)",
+    background: "linear-gradient(180deg, rgba(var(--accentHot-rgb),0.16) 0%, rgba(0,0,0,0.45) 100%), var(--surface2)",
+    boxShadow: "inset 0 -2px 0 rgba(var(--accentGlow-rgb),0.34), 0 6px 12px rgba(var(--accentGlow-rgb),0.16)",
     transform: isLine ? "translateX(0%)" : "translateX(100%)",
     transition: "transform 160ms ease",
     willChange: "transform",
@@ -65,7 +66,7 @@ export function ChartViewToggle({
   };
 
   const activeText: React.CSSProperties = {
-    color: "var(--red)",
+    color: "var(--accentHot)",
   };
 
   return (

@@ -8,9 +8,18 @@ type Props = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   widthPx?: number; // default 520
+  closeOnTabChange?: boolean;
 };
 
-export function Modal({ open, title, onClose, children, footer, widthPx = 520 }: Props) {
+export function Modal({
+  open,
+  title,
+  onClose,
+  children,
+  footer,
+  widthPx = 520,
+  closeOnTabChange = true,
+}: Props) {
   useEffect(() => {
     if (!open) return;
 
@@ -22,11 +31,11 @@ export function Modal({ open, title, onClose, children, footer, widthPx = 520 }:
   }, [open, onClose]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !closeOnTabChange) return;
     const onTabChange = () => onClose();
     window.addEventListener("forge:tab-change", onTabChange as EventListener);
     return () => window.removeEventListener("forge:tab-change", onTabChange as EventListener);
-  }, [open, onClose]);
+  }, [open, onClose, closeOnTabChange]);
 
   if (!open) return null;
 
@@ -53,8 +62,8 @@ export function Modal({ open, title, onClose, children, footer, widthPx = 520 }:
           maxHeight: "92vh",
           overflow: "auto",
           borderRadius: 18,
-          border: "1px solid rgba(255,255,255,0.10)",
-          background: "rgba(10,10,10,0.92)",
+          border: "1px solid var(--strokeSubtle)",
+          background: "var(--surface)",
           backdropFilter: "blur(12px)",
           boxShadow: "0 18px 60px rgba(0,0,0,0.65)",
         }}
@@ -65,8 +74,8 @@ export function Modal({ open, title, onClose, children, footer, widthPx = 520 }:
             top: 0,
             zIndex: 1,
             padding: "14px 14px 10px",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(10,10,10,0.92)",
+            borderBottom: "1px solid var(--strokeSubtle)",
+            background: "var(--surface)",
             backdropFilter: "blur(12px)",
             display: "flex",
             alignItems: "center",
@@ -79,7 +88,7 @@ export function Modal({ open, title, onClose, children, footer, widthPx = 520 }:
             onClick={onClose}
             style={{
               border: "1px solid var(--border)",
-              background: "rgba(255,255,255,0.04)",
+              background: "var(--surface2)",
               color: "var(--text)",
               borderRadius: 12,
               padding: "8px 10px",
@@ -99,8 +108,8 @@ export function Modal({ open, title, onClose, children, footer, widthPx = 520 }:
               position: "sticky",
               bottom: 0,
               padding: 14,
-              borderTop: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(10,10,10,0.92)",
+              borderTop: "1px solid var(--strokeSubtle)",
+              background: "var(--surface)",
               backdropFilter: "blur(12px)",
             }}
           >

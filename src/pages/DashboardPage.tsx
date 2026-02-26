@@ -82,7 +82,7 @@ function BarRow({
           height: 10,
           borderRadius: 999,
           border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.08)",
+          background: "var(--surface2)",
           overflow: "hidden",
         }}
       >
@@ -90,10 +90,8 @@ function BarRow({
           style={{
             height: "100%",
             width: `${p * 100}%`,
-            background:
-              "linear-gradient(180deg, #ff3a2a 0%, #e11d2a 50%, #7a0f16 100%)",
-            boxShadow:
-              "0 0 4px rgba(255, 80, 40, 0.35), 0 0 9px rgba(255, 60, 30, 0.28), 0 0 14px rgba(255, 40, 20, 0.18)",
+            background: "linear-gradient(180deg, var(--accentGlow) 0%, var(--accentHot) 65%, var(--accentHot) 100%)",
+            boxShadow: "0 0 8px rgba(var(--accentGlow-rgb), 0.26)",
             borderRadius: 999,
             transition: "width 280ms ease",
           }}
@@ -365,15 +363,13 @@ export function DashboardPage() {
                 <div style={{ color: "var(--muted)", fontSize: 12 }}>{t("dashboard.kpis.weekProgress", { n: stats.currentWeekCount })}</div>
               </div>
 
-              <div style={{ height: 10, borderRadius: 999, border: "1px solid var(--border)", background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+              <div style={{ height: 10, borderRadius: 999, border: "1px solid var(--border)", background: "var(--surface2)", overflow: "hidden" }}>
                 <div
                   style={{
                     height: "100%",
                     width: `${Math.max(0, Math.min(1, stats.currentWeekCount / 3)) * 100}%`,
-                    background:
-                      "linear-gradient(180deg, #ff3a2a 0%, #e11d2a 50%, #7a0f16 100%)",
-                    boxShadow:
-                      "0 0 4px rgba(255, 80, 40, 0.35), 0 0 9px rgba(255, 60, 30, 0.28), 0 0 14px rgba(255, 40, 20, 0.18)",
+                    background: "linear-gradient(180deg, var(--accentGlow) 0%, var(--accentHot) 65%, var(--accentHot) 100%)",
+                    boxShadow: "0 0 8px rgba(var(--accentGlow-rgb), 0.26)",
                     borderRadius: 999,
                     transition: "width 280ms ease",
                   }}
@@ -385,15 +381,13 @@ export function DashboardPage() {
                 <div style={{ color: "var(--muted)", fontSize: 12 }}>{t("dashboard.kpis.restDays.value", { n: stats.restDaysThisWeek })}</div>
               </div>
 
-              <div style={{ height: 10, borderRadius: 999, border: "1px solid var(--border)", background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+              <div style={{ height: 10, borderRadius: 999, border: "1px solid var(--border)", background: "var(--surface2)", overflow: "hidden" }}>
                 <div
                   style={{
                     height: "100%",
                     width: `${Math.max(0, Math.min(1, stats.restDaysThisWeek / 7)) * 100}%`,
-                    background:
-                      "linear-gradient(180deg, #ff3a2a 0%, #e11d2a 50%, #7a0f16 100%)",
-                    boxShadow:
-                      "0 0 4px rgba(255, 80, 40, 0.35), 0 0 9px rgba(255, 60, 30, 0.28), 0 0 14px rgba(255, 40, 20, 0.18)",
+                    background: "linear-gradient(180deg, var(--accentGlow) 0%, var(--accentHot) 65%, var(--accentHot) 100%)",
+                    boxShadow: "0 0 8px rgba(var(--accentGlow-rgb), 0.26)",
                     borderRadius: 999,
                     transition: "width 280ms ease",
                   }}

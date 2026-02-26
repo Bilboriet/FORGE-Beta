@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { User } from "@supabase/supabase-js";
+import type { AuthChangeEvent, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabaseClient";
 
 export function useSupabaseAuth() {
@@ -15,12 +15,18 @@ export function useSupabaseAuth() {
 
     let mounted = true;
 
-    supabase.auth
-      .getUser()
-      .then(({ data, error: getUserError }) => {
+    void supabase.auth
+      .getSession()
+      .then(({ data, error: sessionError }) => {
         if (!mounted) return;
-        setUser(data.user ?? null);
-        setError(Boolean(getUserError));
+        setUser(data.session?.user ?? null);
+        setError(Boolean(sessionError));
+        if (import.meta.env.DEV) {
+          console.info("[FORGE][AUTH][DEV] getSession on boot", {
+            hasSession: Boolean(data.session),
+            error: sessionError?.message ?? null,
+          });
+        }
       })
       .catch(() => {
         if (!mounted) return;
@@ -31,10 +37,19 @@ export function useSupabaseAuth() {
         setLoading(false);
       });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
       if (!mounted) return;
       setUser(session?.user ?? null);
       setError(false);
+      if (import.meta.env.DEV) {
+        console.info("[FORGE][AUTH][DEV] onAuthStateChange", {
+          event,
+          hasSession: Boolean(session),
+        });
+        if (event === "TOKEN_REFRESHED") {
+          console.info("[FORGE][AUTH][DEV] token refresh fired");
+        }
+      }
     });
 
     return () => {

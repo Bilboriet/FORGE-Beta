@@ -1,5 +1,5 @@
 // src/components/MiniComboChart.tsx
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 
 type Props = {
   bars: number[]; // bar values
@@ -59,6 +59,7 @@ export function MiniComboChart({
   activeIndex = null,
   onActivate,
 }: Props) {
+  const uid = useId().replace(/[:]/g, "");
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [locked, setLocked] = useState(false);
 
@@ -169,9 +170,15 @@ export function MiniComboChart({
   const activeBar = activeIndex !== null && activeIndex >= 0 ? barsGeom[activeIndex] : null;
   const activePt = activeIndex !== null && activeIndex >= 0 ? linePts[activeIndex] : null;
 
-  const NEON = "var(--forge-red)";
-  const NEON_SOFT = "rgba(255, 80, 40, 0.28)";
-  const NEON_TINT = "rgba(255, 80, 40, 0.10)";
+  const NEON = "var(--accentHot)";
+  const NEON_SOFT = "rgba(var(--accentGlow-rgb), 0.20)";
+  const NEON_TINT = "rgba(var(--accentHot-rgb), 0.10)";
+  const comboGlowId = `comboGlow-${uid}`;
+  const comboDotGridId = `comboDotGrid-${uid}`;
+  const comboLineId = `comboLine-${uid}`;
+  const comboBarFillId = `comboBarFill-${uid}`;
+  const comboBarGlowId = `comboBarGlow-${uid}`;
+  const comboClipId = `comboClip-${uid}`;
 
   return (
     <div
@@ -179,18 +186,17 @@ export function MiniComboChart({
       style={{
         width: "100%",
         height,
-        borderRadius: 18,
-        border: "1px solid rgba(255,255,255,0.10)",
-        background:
-          "radial-gradient(120% 90% at 50% 0%, rgba(255,80,40,0.10) 0%, rgba(0,0,0,0) 60%)," +
-          "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.018) 100%)," +
-          "rgba(0,0,0,0.55)",
-        boxShadow: "0 16px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)",
+        borderRadius: 20,
+        border: "1px solid var(--strokeSubtle)",
+        background: "linear-gradient(180deg, var(--surface) 0%, #0f1118 100%)",
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0) 30%)," +
+          "radial-gradient(120% 90% at 8% 0%, rgba(92,108,168,0.14) 0%, rgba(0,0,0,0) 56%)," +
+          "radial-gradient(120% 90% at 92% 12%, rgba(72,88,148,0.09) 0%, rgba(0,0,0,0) 62%)",
+        boxShadow: "var(--cardShadow)",
         overflow: "hidden",
         position: "relative",
         touchAction: "manipulation",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
       }}
       aria-label={ariaLabel}
       onPointerMove={handlePointerMove}
@@ -201,45 +207,43 @@ export function MiniComboChart({
     >
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
         <defs>
-          <filter id="comboGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="0" stdDeviation="0.8" floodColor="var(--forge-red-hot)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="var(--forge-red-mid)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="2.8" floodColor="var(--forge-red-deep)" />
+          <filter id={comboGlowId} x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="0.9" floodColor="rgba(var(--accentGlow-rgb),0.40)" />
+            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="rgba(var(--accentHot-rgb),0.24)" />
           </filter>
 
-          <pattern id="comboDotGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="0.6" fill="rgba(255,255,255,0.14)" />
+          <pattern id={comboDotGridId} width="10" height="10" patternUnits="userSpaceOnUse">
+            <circle cx="1.5" cy="1.5" r="0.6" fill="rgba(255,255,255,0.10)" />
           </pattern>
 
-          <linearGradient id="comboLine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="var(--forge-red-top)" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="var(--forge-red)" stopOpacity="1" />
-            <stop offset="100%" stopColor="var(--forge-red-bottom)" stopOpacity="0.92" />
+          <linearGradient id={comboLineId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="var(--accentGlow)" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="var(--accentHot)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--accentHot)" stopOpacity="0.92" />
           </linearGradient>
 
           {/* Bar fill + subtle forge glow (match forgeMeterFill) */}
-          <linearGradient id="comboBarFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--forge-red-top)" />
-            <stop offset="50%" stopColor="var(--forge-red)" />
-            <stop offset="100%" stopColor="var(--forge-red-bottom)" />
+          <linearGradient id={comboBarFillId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--accentGlow)" stopOpacity="0.92" />
+            <stop offset="22%" stopColor="var(--accentHot)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--accentHot)" stopOpacity="0.98" />
           </linearGradient>
-          <filter id="comboBarGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="0" stdDeviation="0.8" floodColor="var(--forge-red-hot)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="var(--forge-red-mid)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="2.8" floodColor="var(--forge-red-deep)" />
+          <filter id={comboBarGlowId} x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0.3" stdDeviation="0.7" floodColor="rgba(var(--accentGlow-rgb),0.30)" />
+            <feDropShadow dx="0" dy="0.7" stdDeviation="1.2" floodColor="rgba(var(--accentHot-rgb),0.18)" />
           </filter>
 
-          <clipPath id="comboClip">
+          <clipPath id={comboClipId}>
             <rect x={PAD_X} y={PAD_Y} width={innerW} height={innerH} rx="0" ry="0" />
           </clipPath>
         </defs>
 
-        <g clipPath="url(#comboClip)">
-          <rect x={PAD_X} y={PAD_Y} width={innerW} height={innerH} fill="url(#comboDotGrid)" opacity="0.28" />
+        <g clipPath={`url(#${comboClipId})`}>
+          <rect x={PAD_X} y={PAD_Y} width={innerW} height={innerH} fill={`url(#${comboDotGridId})`} opacity="0.22" />
         </g>
 
         {activeBar ? (
-          <rect x={activeBar.x} y={0} width={activeBar.w} height={100} fill={NEON_TINT} opacity="0.35" />
+          <rect x={activeBar.x} y={0} width={activeBar.w} height={100} fill={NEON_TINT} opacity="0.24" />
         ) : null}
 
         {barsGeom.map((b, idx) => {
@@ -254,15 +258,15 @@ export function MiniComboChart({
               height={b.h}
               rx={topRadius}
               ry={topRadius}
-              fill="url(#comboBarFill)"
-              filter="url(#comboBarGlow)"
-              opacity={isActive ? 1 : 0.92}
+              fill={`url(#${comboBarFillId})`}
+              filter={`url(#${comboBarGlowId})`}
+              opacity={isActive ? 1 : 0.96}
             />
           );
         })}
 
         {linePath ? (
-          <g clipPath="url(#comboClip)">
+          <g clipPath={`url(#${comboClipId})`}>
             {activePt ? (
               <>
                 <line
@@ -270,13 +274,13 @@ export function MiniComboChart({
                   y1={PAD_Y}
                   x2={activePt.x}
                   y2={baseY}
-                  stroke="rgba(255,255,255,0.22)"
+                  stroke="rgba(237,237,237,0.30)"
                   strokeWidth="0.8"
-                  opacity="0.9"
+                  opacity="0.7"
                 />
                 <circle cx={activePt.x} cy={activePt.y} r={2.6} fill="rgba(0,0,0,0.55)" />
-                <circle cx={activePt.x} cy={activePt.y} r={2.0} fill={NEON} filter="url(#comboGlow)" />
-                <circle cx={activePt.x} cy={activePt.y} r={6.0} fill={NEON_SOFT} opacity="0.35" />
+                <circle cx={activePt.x} cy={activePt.y} r={2.0} fill={NEON} filter={`url(#${comboGlowId})`} />
+                <circle cx={activePt.x} cy={activePt.y} r={5.4} fill={NEON_SOFT} opacity="0.22" />
               </>
             ) : null}
 
@@ -284,17 +288,17 @@ export function MiniComboChart({
               d={linePath}
               fill="none"
               stroke={NEON}
-              strokeWidth="6"
+              strokeWidth="4.8"
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity="0.14"
-              filter="url(#comboGlow)"
+              opacity="0.12"
+              filter={`url(#${comboGlowId})`}
             />
 
             <path
               d={linePath}
               fill="none"
-              stroke="url(#comboLine)"
+              stroke={`url(#${comboLineId})`}
               strokeWidth="2.6"
               strokeLinecap="round"
               strokeLinejoin="round"

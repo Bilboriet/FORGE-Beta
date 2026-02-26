@@ -20,11 +20,13 @@ export default function AuthCallbackPage() {
 
       try {
         const href = window.location.href;
-        const hasCode = href.includes("code=");
+        const parsedUrl = new URL(href);
+        const code = parsedUrl.searchParams.get("code");
+        const hasCode = Boolean(code);
         let handled = false;
 
         if (hasCode) {
-          const res = await supabase.auth.exchangeCodeForSession(href);
+          const res = await supabase.auth.exchangeCodeForSession(code as string);
           if (res.error) throw res.error;
           handled = true;
         } else {
@@ -38,10 +40,23 @@ export default function AuthCallbackPage() {
 
         if (!handled) {
           const { data, error } = await supabase.auth.getSession();
+          if (import.meta.env.DEV) {
+            console.info("[FORGE][AUTH][DEV] callback getSession fallback", {
+              hasSession: Boolean(data.session),
+              error: error?.message ?? null,
+            });
+          }
           if (error || !data.session) throw error ?? new Error("No session");
         }
 
         if (cancelled) return;
+
+        if (import.meta.env.DEV) {
+          console.info("[FORGE][AUTH][DEV] callback success", {
+            hasCode,
+            path: window.location.pathname,
+          });
+        }
 
         history.replaceState({}, document.title, "/");
         localStorage.setItem(LS_KEYS.active_tab_v1, "innstillinger");
@@ -83,8 +98,8 @@ export default function AuthCallbackPage() {
           display: "grid",
           gap: 10,
           boxShadow: failed
-            ? "inset 0 0 0 1px rgba(255,59,59,0.22)"
-            : "inset 0 0 0 1px rgba(255,59,59,0.12)",
+            ? "inset 0 0 0 1px rgba(var(--accentHot-rgb),0.22)"
+            : "inset 0 0 0 1px rgba(var(--accentHot-rgb),0.12)",
         }}
       >
         <h2 style={{ margin: 0, color: "var(--text)", fontWeight: 950 }}>{t("settings.auth.signingIn")}</h2>
@@ -109,9 +124,9 @@ export default function AuthCallbackPage() {
               justifySelf: "start",
               padding: "10px 12px",
               borderRadius: 12,
-              border: "1px solid rgba(255,59,59,0.45)",
-              background: "rgba(255,59,59,0.1)",
-              color: "rgb(255,201,201)",
+              border: "1px solid rgba(var(--accentHot-rgb),0.45)",
+              background: "rgba(var(--accentHot-rgb),0.1)",
+              color: "var(--text)",
               cursor: "pointer",
               fontWeight: 900,
             }}

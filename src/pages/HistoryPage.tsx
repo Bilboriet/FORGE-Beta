@@ -520,7 +520,7 @@ export default function HistoryPage() {
       </div>
 
       {/* Exercise search */}
-      <div style={{ border: "1px solid var(--border)", borderRadius: 16, background: "rgba(255,255,255,0.03)", padding: 12 }}>
+      <div style={{ border: "1px solid var(--border)", borderRadius: 16, background: "var(--surface2)", padding: 12 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <input
             value={exerciseQuery}
@@ -573,7 +573,7 @@ export default function HistoryPage() {
         style={{
           border: "1px solid var(--border)",
           borderRadius: 16,
-          background: "rgba(255,255,255,0.03)",
+          background: "var(--surface2)",
           padding: "14px 14px",
           display: "flex",
           justifyContent: "space-between",
@@ -599,7 +599,7 @@ export default function HistoryPage() {
             border: "1px solid var(--border)",
             borderRadius: 16,
             padding: 14,
-            background: "rgba(255,255,255,0.03)",
+            background: "var(--surface2)",
             color: "var(--muted)",
           }}
         >
@@ -651,7 +651,7 @@ export default function HistoryPage() {
                 border: "1px solid var(--border)",
                 borderRadius: 16,
                 padding: 14,
-                background: "rgba(255,255,255,0.03)",
+                background: "var(--surface2)",
                 display: "grid",
                 gap: 10,
               }}
@@ -755,7 +755,7 @@ export default function HistoryPage() {
                     border: "1px solid var(--border)",
                     borderRadius: 16,
                     padding: 14,
-                    background: "rgba(255,255,255,0.03)",
+                    background: "var(--surface2)",
                     display: "grid",
                     gap: 10,
                   }}
@@ -778,7 +778,7 @@ export default function HistoryPage() {
                             padding: 10,
                             borderRadius: 14,
                             border: "1px solid var(--border)",
-                            background: "rgba(255,255,255,0.04)",
+                            background: "var(--surface2)",
                           }}
                         >
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, color: "var(--text)", fontWeight: 850 }}>
@@ -816,7 +816,7 @@ export default function HistoryPage() {
                             style={{
                               border: "1px solid var(--border)",
                               borderRadius: 16,
-                              background: "rgba(255,255,255,0.03)",
+                              background: "var(--surface2)",
                               padding: 12,
                               display: "grid",
                               gap: 10,

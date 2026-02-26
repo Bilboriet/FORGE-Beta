@@ -1,5 +1,5 @@
 // src/components/MiniPieChart.tsx
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 
 export type PieSlice = {
   label: string;
@@ -57,6 +57,8 @@ export function MiniPieChart({
   centerLabel,
   centerSubLabel,
 }: Props) {
+  const uid = useId().replace(/[:]/g, "");
+  const pieGlowId = `pieGlow-${uid}`;
   const safeSlices = useMemo(() => {
     const arr = (Array.isArray(slices) ? slices : [])
       .map((s) => ({
@@ -82,12 +84,12 @@ export function MiniPieChart({
 
   // Forge palette: token-driven heated red tones (no legacy white palette)
   const palette = [
-    "var(--forge-red-top, #ff3a2a)",
-    "var(--forge-red, #e11d2a)",
-    "var(--forge-red-bottom, #7a0f16)",
-    "rgba(225, 29, 42, 0.78)",
-    "rgba(225, 29, 42, 0.58)",
-    "rgba(225, 29, 42, 0.38)",
+    "var(--accentHot)",
+    "rgba(var(--accentHot-rgb), 0.90)",
+    "rgba(var(--accentHot-rgb), 0.78)",
+    "rgba(var(--accentHot-rgb), 0.62)",
+    "rgba(var(--accentHot-rgb), 0.48)",
+    "rgba(var(--accentHot-rgb), 0.36)",
   ];
 
   const arcs = useMemo(() => {
@@ -119,10 +121,13 @@ export function MiniPieChart({
         style={{
           width: size,
           height: size,
-          borderRadius: 16,
-          border: "1px solid var(--border)",
-          background:
-            "radial-gradient(120% 90% at 50% 0%, rgba(255,80,40,0.08) 0%, rgba(0,0,0,0) 60%), rgba(0,0,0,0.45)",
+          borderRadius: 20,
+          border: "1px solid var(--strokeSubtle)",
+          background: "linear-gradient(180deg, var(--surface) 0%, #0f1118 100%)",
+          backgroundImage:
+            "linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0) 30%)," +
+            "radial-gradient(120% 90% at 8% 0%, rgba(92,108,168,0.14) 0%, rgba(0,0,0,0) 56%)," +
+            "radial-gradient(120% 90% at 92% 12%, rgba(72,88,148,0.09) 0%, rgba(0,0,0,0) 62%)",
           display: "grid",
           placeItems: "center",
           color: "var(--muted)",
@@ -137,12 +142,18 @@ export function MiniPieChart({
   return (
     <div style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <defs>
+          <filter id={pieGlowId} x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="0.9" floodColor="rgba(var(--accentGlow-rgb),0.36)" />
+            <feDropShadow dx="0" dy="0" stdDeviation="1.6" floodColor="rgba(var(--accentHot-rgb),0.20)" />
+          </filter>
+        </defs>
         {/* subtle ring bg */}
         <circle
           cx={cx}
           cy={cy}
           r={(rOuter + rInner) / 2}
-          stroke="rgba(225, 29, 42, 0.18)"
+          stroke="rgba(var(--accentHot-rgb), 0.14)"
           strokeWidth={rOuter - rInner}
           fill="none"
         />
@@ -154,6 +165,7 @@ export function MiniPieChart({
             fill={a.fill}
             stroke="rgba(0,0,0,0.35)"
             strokeWidth={1}
+            filter={`url(#${pieGlowId})`}
           />
         ))}
 
@@ -193,4 +205,3 @@ export function MiniPieChart({
     </div>
   );
 }
-

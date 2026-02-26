@@ -174,7 +174,7 @@ function SortableWidget({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,
@@ -442,7 +442,7 @@ export function WidgetBoard({
       {showCustomize && hiddenDefs.length ? (
         <div
           style={{
-            border: "1px solid rgba(255,255,255,0.10)",
+            border: "1px solid var(--strokeSubtle)",
             borderRadius: 14,
             padding: 10,
             background: "rgba(0,0,0,0.20)",

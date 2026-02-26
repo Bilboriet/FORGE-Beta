@@ -141,8 +141,8 @@ function SectionCard({
       <div
         style={{
           padding: "10px 12px",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(0,0,0,0.18)",
+          borderBottom: "1px solid var(--strokeSubtle)",
+          background: "var(--surface2)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "baseline",

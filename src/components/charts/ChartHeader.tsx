@@ -71,9 +71,9 @@ export function ChartHeader({
                 fontWeight: 800,
                 padding: "3px 8px",
                 borderRadius: 999,
-                background: "rgba(255,59,59,0.12)",
-                border: "1px solid rgba(255,59,59,0.28)",
-                color: "rgba(255,255,255,0.92)",
+                background: "rgba(var(--accentHot-rgb),0.12)",
+                border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+                color: "var(--accentHot)",
                 userSelect: "none",
                 flex: "0 0 auto",
               }}
@@ -124,8 +124,8 @@ export function ChartHeader({
                 fontSize: 12,
                 padding: "2px 8px",
                 borderRadius: 999,
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "var(--surface2)",
+                border: "1px solid var(--strokeSubtle)",
                 color: "rgba(255,255,255,0.86)",
               }}
             >

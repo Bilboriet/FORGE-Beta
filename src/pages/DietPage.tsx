@@ -85,9 +85,9 @@ function sleepDurationHours(entry: SleepEntryV1) {
 /* -------------------------------- utilities -------------------------------- */
 
 function indicatorColor(ind: Indicator) {
-  if (ind === "up") return "rgb(34,197,94)";
-  if (ind === "down") return "rgb(255,59,59)";
-  if (ind === "flat") return "rgb(148,163,184)";
+  if (ind === "up") return "var(--accentGlow)";
+  if (ind === "down") return "var(--accentHot)";
+  if (ind === "flat") return "var(--muted)";
   return "var(--muted)";
 }
 
@@ -835,7 +835,7 @@ export function DietPage() {
                 padding: 12,
                 borderRadius: 14,
                 border: "1px solid var(--border)",
-                background: "rgba(0,0,0,0.18)",
+                background: "var(--surface2)",
                 display: "grid",
                 gap: 8,
               }}
@@ -852,7 +852,7 @@ export function DietPage() {
                     padding: "8px 10px",
                     borderRadius: 12,
                     border: "1px solid var(--border)",
-                    background: "rgba(255,255,255,0.04)",
+                    background: "var(--surface2)",
                     color: "var(--text)",
                     cursor: "pointer",
                     fontWeight: 850,
@@ -1025,7 +1025,7 @@ export function DietPage() {
           padding: 12,
           borderRadius: 14,
           border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.04)",
+          background: "var(--surface2)",
           color: "var(--muted)",
           fontSize: 13,
           lineHeight: 1.35,

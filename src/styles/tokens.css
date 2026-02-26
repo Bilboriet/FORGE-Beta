@@ -1,50 +1,79 @@
 :root{
   color-scheme: dark;
 
+  /* Theme Engine V2 primitives (Plasma Red baseline) */
+  --bg: #08090c;
+  --surface: #14161d;
+  --surface2: #0f1218;
+  --surfaceTop: #14161D;
+  --surfaceBot: #0F1218;
+  --text: #ededed;
+  --muted: rgba(237,237,237,0.72);
+
+  --accentHot: #ff2a2a;
+  --accentGlow: #ff6a3d;
+  --accentHot-rgb: 255, 42, 42;
+  --accentGlow-rgb: 255, 106, 61;
+
+  --strokeSubtle: rgba(255,255,255,0.07);
+  --strokeInner: rgba(255,255,255,0.04);
+  --cardRadius: 21px;
+  --cardShadowStack:
+    0 14px 28px rgba(0,0,0,0.55),
+    0 40px 110px rgba(0,0,0,0.78);
+  --cardInsetRim: inset 0 1px 0 rgba(255,255,255,0.04);
+  --cardInsetShade: inset 0 -16px 28px rgba(0,0,0,0.35);
+  --cardShadow: var(--cardShadowStack), var(--cardInsetRim), var(--cardInsetShade);
+
+  /* Compatibility aliases for existing components */
+  --mutedText: var(--muted);
+  --border: var(--strokeSubtle);
+  --shadow: var(--cardShadow);
+  --focusRing: rgba(var(--accentHot-rgb), 0.36);
+  --accent: var(--accentHot);
+  --accent2: var(--accentGlow);
+  --accent-rgb: var(--accentHot-rgb);
+  --accent2-rgb: var(--accentGlow-rgb);
+
   /* Forge glow single source of truth */
-  --forge-red: #e11d2a;
-  --forge-red-hot: rgba(255, 80, 40, 0.35);
-  --forge-red-mid: rgba(255, 60, 30, 0.28);
-  --forge-red-deep: rgba(255, 40, 20, 0.18);
-  --forge-red-soft-hot: rgba(255, 80, 40, 0.22);
-  --forge-red-soft-mid: rgba(255, 60, 30, 0.16);
-  --forge-red-top: #ff3a2a;
+  --forge-red: var(--accentHot);
+  --forge-red-hot: rgba(var(--accentGlow-rgb), 0.35);
+  --forge-red-mid: rgba(var(--accentHot-rgb), 0.28);
+  --forge-red-deep: rgba(var(--accentHot-rgb), 0.18);
+  --forge-red-soft-hot: rgba(var(--accentGlow-rgb), 0.22);
+  --forge-red-soft-mid: rgba(var(--accentHot-rgb), 0.16);
+  --forge-red-top: var(--accentGlow);
   --forge-red-bottom: #7a0f16;
   --forge-glow-tight: 0 0 4px var(--forge-red-hot), 0 0 9px var(--forge-red-mid), 0 0 14px var(--forge-red-deep);
   --forge-glow-soft: 0 0 3px var(--forge-red-soft-hot), 0 0 7px var(--forge-red-soft-mid);
 
   /* Obsidian base */
-  --bg: #0b0c0f;
   --bg2: #07080b;
 
   /* Steel plates (darker, less gray) */
-  --card: #0c0d11;
-  --card2: #08090c;
+  --card: var(--surface);
+  --card2: var(--surface2);
   --well: rgba(0,0,0,0.22);
 
   /* Lines */
-  --border: rgba(255,255,255,0.085);
   --stroke: rgba(255,255,255,0.060);
 
   /* Text */
-  --text: rgba(255,255,255,0.92);
   --section-title: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.72);
   --faint: rgba(255,255,255,0.42);
 
   /* Blood red (headings + brand) */
   --red: var(--forge-red);        /* heading blood red */
-  --redHot: #c21010;              /* active/heat (controlled) */
-  --redSoft: rgba(143,14,19,0.16);
+  --redHot: var(--accentHot);     /* active/heat (controlled) */
+  --redSoft: rgba(var(--accentHot-rgb), 0.14);
 
   /* Shape */
   --radius: 14px;
   --radiusSm: 12px;
-  --radiusLg: 18px;
+  --radiusLg: var(--cardRadius);
 
   /* Shadows (deeper, cleaner) */
   --shadowSoft: 0 14px 36px rgba(0,0,0,0.48);
-  --shadow: 0 28px 84px rgba(0,0,0,0.7);
 
   /* Surface effects */
   --specularA: rgba(255,255,255,0.085);
@@ -111,13 +140,13 @@
   --padRoomy: 16px;
 
   /* Nested inner wells */
-  --innerBgA: rgba(0,0,0,0.28);
-  --innerBgB: rgba(0,0,0,0.18);
-  --innerBorder: rgba(255,255,255,0.10);
-  --innerStroke: rgba(255,255,255,0.06);
+  --innerBgA: rgba(20,23,31,0.82);
+  --innerBgB: rgba(12,14,20,0.94);
+  --innerBorder: rgba(255,255,255,0.06);
+  --innerStroke: rgba(255,255,255,0.03);
 
-  --innerGlowRed: rgba(255,40,40,0.08);
-  --innerGlowHeat: rgba(255,120,20,0.06);
+  --innerGlowRed: rgba(var(--accentHot-rgb), 0.04);
+  --innerGlowHeat: rgba(var(--accentGlow-rgb), 0.035);
 
   --innerRadius: 14px;
   --innerShadow: 0 14px 28px rgba(0,0,0,0.45);

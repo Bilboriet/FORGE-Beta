@@ -29,8 +29,8 @@ function Row({ label, value, badge }: RecordRow) {
               fontWeight: 900,
               padding: "2px 8px",
               borderRadius: 999,
-              border: "1px solid rgba(255,59,59,0.35)",
-              background: "rgba(255,59,59,0.10)",
+              border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+              background: "rgba(var(--accentHot-rgb),0.10)",
               color: "var(--red)",
             }}
           >
@@ -68,8 +68,8 @@ export function RecordsCard({
           justifyContent: "space-between",
           alignItems: "baseline",
           gap: 10,
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(0,0,0,0.18)",
+          borderBottom: "1px solid var(--strokeSubtle)",
+          background: "var(--surface2)",
         }}
       >
         <div style={{ fontSize: 16, fontWeight: 900 }}>{title}</div>
@@ -90,7 +90,7 @@ export function RecordsCard({
         <div
           style={{
             padding: "10px 14px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
+            borderTop: "1px solid var(--strokeSubtle)",
             color: "var(--muted)",
             fontSize: 12,
           }}

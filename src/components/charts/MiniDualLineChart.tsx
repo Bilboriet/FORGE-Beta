@@ -1,5 +1,5 @@
 // src/components/MiniDualLineChart.tsx
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 
 type Props = {
   a: number[];
@@ -59,6 +59,7 @@ export function MiniDualLineChart({
   activeIndex = null,
   onActivate,
 }: Props) {
+  const uid = useId().replace(/[:]/g, "");
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [locked, setLocked] = useState(false);
 
@@ -173,9 +174,11 @@ export function MiniDualLineChart({
   const activePtB = activeIndex !== null && activeIndex >= 0 ? ptsB[activeIndex] : null;
 
   // color: use same red family for A, muted for B
-  const A_COL = "var(--forge-red)";
-  const A_SOFT = "rgba(255, 80, 40, 0.28)";
-  const B_COL = "rgba(122, 15, 22, 0.78)";
+  const A_COL = "var(--accentHot)";
+  const A_SOFT = "rgba(var(--accentGlow-rgb), 0.20)";
+  const B_COL = "rgba(237,237,237,0.44)";
+  const dualGlowId = `dualGlow-${uid}`;
+  const dualClipId = `dualClip-${uid}`;
 
   return (
     <div
@@ -183,19 +186,17 @@ export function MiniDualLineChart({
       style={{
         width: "100%",
         height,
-        borderRadius: 18,
-        border: "1px solid rgba(255,255,255,0.10)",
-        background:
-          "radial-gradient(120% 90% at 50% 0%, rgba(255,80,40,0.10) 0%, rgba(0,0,0,0) 60%)," +
-          "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.018) 100%)," +
-          "rgba(0,0,0,0.55)",
-        boxShadow:
-          "0 16px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)",
+        borderRadius: 20,
+        border: "1px solid var(--strokeSubtle)",
+        background: "linear-gradient(180deg, var(--surface) 0%, #0f1118 100%)",
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0) 30%)," +
+          "radial-gradient(120% 90% at 8% 0%, rgba(92,108,168,0.14) 0%, rgba(0,0,0,0) 56%)," +
+          "radial-gradient(120% 90% at 92% 12%, rgba(72,88,148,0.09) 0%, rgba(0,0,0,0) 62%)",
+        boxShadow: "var(--cardShadow)",
         overflow: "hidden",
         position: "relative",
         touchAction: "manipulation",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
       }}
       aria-label={ariaLabel}
       title={n === 0 ? "Ingen data" : `Min: ${Math.round(min)} • Max: ${Math.round(max)} • Punkter: ${n}`}
@@ -214,9 +215,9 @@ export function MiniDualLineChart({
           display: "flex",
           gap: 10,
           fontSize: 12,
-          color: "rgba(255,255,255,0.82)",
+          color: "var(--muted)",
           background: "rgba(0,0,0,0.35)",
-          border: "1px solid rgba(255,255,255,0.10)",
+          border: "1px solid var(--strokeSubtle)",
           borderRadius: 12,
           padding: "6px 8px",
         }}
@@ -233,18 +234,17 @@ export function MiniDualLineChart({
 
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
         <defs>
-          <filter id="dualGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="0.8" floodColor="var(--forge-red-hot)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="var(--forge-red-mid)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="2.8" floodColor="var(--forge-red-deep)" />
+          <filter id={dualGlowId} x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="0.9" floodColor="rgba(var(--accentGlow-rgb),0.40)" />
+            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="rgba(var(--accentHot-rgb),0.24)" />
           </filter>
 
-          <clipPath id="dualClip">
+          <clipPath id={dualClipId}>
             <rect x={PAD_X} y={PAD_Y} width={innerW} height={innerH} />
           </clipPath>
         </defs>
 
-        <g clipPath="url(#dualClip)">
+        <g clipPath={`url(#${dualClipId})`}>
           {pathB ? (
             <path
               d={pathB}
@@ -265,15 +265,15 @@ export function MiniDualLineChart({
               strokeWidth="2.8"
               strokeLinecap="round"
               strokeLinejoin="round"
-              filter="url(#dualGlow)"
+              filter={`url(#${dualGlowId})`}
               opacity="0.95"
             />
           ) : null}
 
           {activePtA ? (
             <>
-              <circle cx={activePtA.x} cy={activePtA.y} r={6.0} fill={A_SOFT} opacity="0.32" />
-              <circle cx={activePtA.x} cy={activePtA.y} r={2.2} fill={A_COL} filter="url(#dualGlow)" />
+              <circle cx={activePtA.x} cy={activePtA.y} r={5.4} fill={A_SOFT} opacity="0.22" />
+              <circle cx={activePtA.x} cy={activePtA.y} r={2.2} fill={A_COL} filter={`url(#${dualGlowId})`} />
             </>
           ) : null}
 

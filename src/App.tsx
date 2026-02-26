@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomNav, type TabKey } from "./components/layout/BottomNav";
 import { PageMotion } from "./components/layout/Pagemotion";
+import { Modal } from "./components/ui/Modal";
 import { useT } from "./hooks/useT";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LogPage } from "./pages/LogPage";
@@ -10,7 +11,6 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import DietPage from "./pages/DietPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { LS_KEYS } from "./constants";
-import forgeLogo from "./assets/forge_logo_clean.png";
 
 function Page({ tab }: { tab: TabKey }) {
   switch (tab) {
@@ -48,6 +48,12 @@ function quickTabToTabKey(t: QuickTab): TabKey {
 
 export default function App() {
   const tr = useT();
+  const [startupNoticeOpen, setStartupNoticeOpen] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setStartupNoticeOpen(false), 30000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const [tab, setTab] = useState<TabKey>(() => {
     try {
@@ -144,10 +150,10 @@ export default function App() {
 
   return (
     <div className="forgeShell">
-      <header className="forgeTopBar">
+      <header className="forgeHeader">
         <div className="forgeTopBarInner">
           <div className="forge-logo-wrap">
-            <img src={forgeLogo} alt="FORGE" className="forge-logo-img" />
+            <p className="forgeBrand">FORGE</p>
           </div>
         </div>
       </header>
@@ -161,6 +167,26 @@ export default function App() {
       </main>
 
       <BottomNav active={tab} onChange={setTab} hasDraft={hasDraft} />
+
+      <Modal
+        open={startupNoticeOpen}
+        onClose={() => setStartupNoticeOpen(false)}
+        title="Notice"
+        widthPx={560}
+        closeOnTabChange={false}
+        footer={(
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button className="forge-btn forge-btn--hot" onClick={() => setStartupNoticeOpen(false)}>
+              OK
+            </button>
+          </div>
+        )}
+      >
+        <div style={{ color: "var(--text)", lineHeight: 1.5 }}>
+          The Forge is under development. Everything may and will change. WARNING. Frequently back up
+          your workout to cloud in settings!
+        </div>
+      </Modal>
     </div>
   );
 }

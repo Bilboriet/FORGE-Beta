@@ -668,7 +668,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
         const q = sleepEntryForDay.quality ? `${sleepEntryForDay.quality}/5` : null;
         const bits = [
           t("sleep.status.prefix"),
-          dur ? dur : `${sleepEntryForDay.bedtime || "—"} → ${sleepEntryForDay.wakeTime || "—"}`,
+          dur ? dur : `${sleepEntryForDay.bedtime || "—"} ? ${sleepEntryForDay.wakeTime || "—"}`,
           q ? `• ${q}` : null,
         ].filter(Boolean);
         return bits.join(" ");
@@ -694,8 +694,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
         ref={sleepBtnRef}
         onClick={openSleepPopover}
         style={{
-          border: "1px solid rgba(255,59,59,0.35)",
-          background: "rgba(255,59,59,0.14)",
+          border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+          background: "rgba(var(--accentHot-rgb),0.14)",
           color: "var(--text)",
           borderRadius: 999,
           padding: "8px 12px",
@@ -719,8 +719,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
             top: sleepPos?.top ?? 120,
             width: 320,
             borderRadius: 16,
-            border: "1px solid rgba(255,255,255,0.12)",
-            background: "rgba(10,10,10,0.96)",
+            border: "1px solid var(--strokeSubtle)",
+            background: "var(--surface)",
             backdropFilter: "blur(12px)",
             boxShadow: "0 18px 60px rgba(0,0,0,0.65)",
             padding: 12,
@@ -734,7 +734,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
               onClick={() => { setSleepOpen(false); setSleepPos(null); }}
               style={{
                 border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
+                background: "var(--surface2)",
                 color: "var(--text)",
                 borderRadius: 12,
                 padding: "6px 8px",
@@ -742,7 +742,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 fontWeight: 950,
               }}
             >
-              ✕
+              X
             </button>
           </div>
 
@@ -789,7 +789,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
               onClick={() => { setSleepOpen(false); setSleepPos(null); }}
               style={{
                 border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
+                background: "var(--surface2)",
                 color: "var(--text)",
                 borderRadius: 12,
                 padding: "10px 12px",
@@ -802,8 +802,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
             <button
               onClick={saveSleepPopover}
               style={{
-                border: "1px solid rgba(255,59,59,0.35)",
-                background: "rgba(255,59,59,0.14)",
+                border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+                background: "rgba(var(--accentHot-rgb),0.14)",
                 color: "var(--text)",
                 borderRadius: 12,
                 padding: "10px 12px",
@@ -852,8 +852,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
               pointerEvents: "auto",
               padding: 14,
               borderRadius: 16,
-              background: "rgba(12,12,12,0.92)",
-              border: "1px solid rgba(255,59,59,0.35)",
+              background: "var(--surface)",
+              border: "1px solid rgba(var(--accentHot-rgb),0.35)",
               boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
               display: "grid",
               gap: 4,
@@ -876,7 +876,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 padding: "8px 10px",
                 borderRadius: 12,
                 border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.04)",
+                background: "var(--surface2)",
                 color: "var(--muted)",
                 cursor: "pointer",
               }}
@@ -952,8 +952,8 @@ function addExerciseBlock(exercise: ExerciseRef) {
                   right: -10,
                   padding: "6px 8px",
                   borderRadius: 999,
-                  background: "rgba(12,12,12,0.92)",
-                  border: "1px solid rgba(255,59,59,0.45)",
+                  background: "var(--surface)",
+                  border: "1px solid rgba(var(--accentHot-rgb),0.45)",
                   color: "var(--red)",
                   fontWeight: 900,
                   fontSize: 12,
@@ -964,7 +964,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 }}
                 aria-label={t("log.pr.badgeAria")}
               >
-                <span>🔥</span>
+                <span>PR</span>
                 <span>{t("log.pr.badgeText")}</span>
               </div>
             )}
@@ -1050,7 +1050,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                     padding: "8px 10px",
                     borderRadius: 12,
                     border: "1px solid var(--border)",
-                    background: "rgba(255,255,255,0.04)",
+                    background: "var(--surface2)",
                     color: "var(--muted)",
                     cursor: "pointer",
                   }}
@@ -1193,7 +1193,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                 padding: 12,
                 border: "1px solid var(--border)",
                 borderRadius: 12,
-                background: "rgba(255,255,255,0.04)",
+                background: "var(--surface2)",
                 color: "var(--text)",
                 cursor: "pointer",
               }}
@@ -1239,13 +1239,13 @@ function addExerciseBlock(exercise: ExerciseRef) {
                       fontWeight: 900,
                       padding: "6px 8px",
                       borderRadius: 12,
-                      border: "1px solid rgba(255,59,59,0.35)",
-                      background: "rgba(255,59,59,0.10)",
+                      border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+                      background: "rgba(var(--accentHot-rgb),0.10)",
                       lineHeight: 1,
                     }}
                     aria-label="PR"
                   >
-                    🔥
+                    PR
                   </div>
                 )}
 
@@ -1304,7 +1304,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
           maxHeight: "90vh",
           overflow: "auto",
           padding: 12,
-          background: "rgba(8,8,10,0.97)",
+          background: "var(--surface)",
           display: "grid",
           gap: 12,
         }}
@@ -1339,7 +1339,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
             padding: "10px 12px",
             borderRadius: 12,
             border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.04)",
+            background: "var(--surface2)",
             color: "var(--text)",
           }}
         />
@@ -1401,7 +1401,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
                     padding: "6px 10px",
                     borderRadius: 10,
                     border: "1px solid var(--border)",
-                    background: "rgba(255,255,255,0.04)",
+                    background: "var(--surface2)",
                     color: "var(--muted)",
                     cursor: "pointer",
                   }}
@@ -1423,7 +1423,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
               padding: "10px 12px",
               borderRadius: 12,
               border: "1px solid var(--border)",
-              background: "rgba(255,255,255,0.04)",
+              background: "var(--surface2)",
               color: "var(--text)",
               cursor: "pointer",
             }}
@@ -1435,7 +1435,7 @@ function addExerciseBlock(exercise: ExerciseRef) {
             style={{
               padding: "10px 12px",
               borderRadius: 12,
-              border: "1px solid rgba(255,59,59,0.55)",
+              border: "1px solid rgba(var(--accentHot-rgb),0.55)",
               background: "var(--redSoft)",
               color: "var(--red)",
               cursor: "pointer",
@@ -1461,6 +1461,7 @@ return (
     </div>
   );
 }
+
 
 
 

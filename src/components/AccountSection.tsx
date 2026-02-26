@@ -189,7 +189,7 @@ export default function AccountSection() {
   const linkedGlow: React.CSSProperties = user
     ? {
         boxShadow:
-          "inset 0 0 0 1px rgba(255,59,59,0.18), 0 10px 28px rgba(255,59,59,0.08)",
+          "inset 0 0 0 1px rgba(var(--accentHot-rgb),0.18), 0 10px 28px rgba(var(--accentHot-rgb),0.08)",
       }
     : {};
   const cloudCountsText = useMemo(() => {

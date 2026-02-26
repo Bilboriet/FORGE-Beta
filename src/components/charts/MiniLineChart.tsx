@@ -249,9 +249,9 @@ export function MiniLineChart({
     activeIndex !== null && activeIndex >= 0 ? plotPoints[activeIndex] : null;
 
   // Forge token-driven accents (match global chart + meter styling)
-  const NEON = "var(--red)";
-  const NEON_SOFT = "var(--forge-red-hot)";
-  const NEON_TINT = "var(--redSoft)";
+  const NEON = "var(--accentHot)";
+  const NEON_SOFT = "rgba(var(--accentGlow-rgb), 0.20)";
+  const NEON_TINT = "rgba(var(--accentHot-rgb), 0.10)";
 
   const neonGlowId = `forgeNeonGlow-${uid}`;
   const dotGridId = `forgeDotGrid-${uid}`;
@@ -267,19 +267,17 @@ export function MiniLineChart({
       style={{
         width: "100%",
         height,
-        borderRadius: 18,
-        border: "1px solid rgba(255,255,255,0.10)",
-        background:
-          "radial-gradient(120% 90% at 50% 0%, rgba(255,80,40,0.10) 0%, rgba(0,0,0,0) 60%)," +
-          "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.018) 100%)," +
-          "rgba(0,0,0,0.55)",
-        boxShadow:
-          "0 16px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)",
+        borderRadius: 20,
+        border: "1px solid var(--strokeSubtle)",
+        background: "linear-gradient(180deg, var(--surface) 0%, #0f1118 100%)",
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0) 30%)," +
+          "radial-gradient(120% 90% at 8% 0%, rgba(92,108,168,0.14) 0%, rgba(0,0,0,0) 56%)," +
+          "radial-gradient(120% 90% at 92% 12%, rgba(72,88,148,0.09) 0%, rgba(0,0,0,0) 62%)",
+        boxShadow: "var(--cardShadow)",
         overflow: "hidden",
         position: "relative",
         touchAction: "manipulation",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
       }}
       aria-label={ariaLabel}
       title={title}
@@ -297,14 +295,12 @@ export function MiniLineChart({
             left: 12,
             top: 10,
             fontSize: 12,
-            color: "rgba(255,255,255,0.92)",
+            color: "var(--text)",
             padding: "8px 10px",
             borderRadius: 12,
             background: "rgba(0,0,0,0.55)",
-            border: "1px solid rgba(255,255,255,0.10)",
+            border: "1px solid var(--strokeSubtle)",
             boxShadow: "0 10px 26px rgba(0,0,0,0.45)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
             userSelect: "none",
             pointerEvents: "none",
             lineHeight: 1.25,
@@ -313,13 +309,13 @@ export function MiniLineChart({
           }}
         >
           <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
-            <span style={{ color: "rgba(255,255,255,0.72)" }}>{primaryLabel}</span>
+            <span style={{ color: "var(--muted)" }}>{primaryLabel}</span>
             <span style={{ fontWeight: 900 }}>{roundSmart(primaryValue)}</span>
           </div>
           {secondaryValue !== null ? (
             <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>{secondaryLabel}</span>
-              <span style={{ color: "rgba(255,255,255,0.82)", fontWeight: 800 }}>
+              <span style={{ color: "var(--muted)" }}>{secondaryLabel}</span>
+              <span style={{ color: "var(--text)", fontWeight: 800 }}>
                 {roundSmart(secondaryValue)}
               </span>
             </div>
@@ -331,39 +327,37 @@ export function MiniLineChart({
         <defs>
           {/* Heated metal glow (token-driven, no legacy palette) */}
           <filter id={neonGlowId} x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="0" stdDeviation="0.8" floodColor="var(--forge-red-hot)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="var(--forge-red-mid)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="2.8" floodColor="var(--forge-red-deep)" />
+            <feDropShadow dx="0" dy="0" stdDeviation="0.9" floodColor="rgba(var(--accentGlow-rgb),0.40)" />
+            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="rgba(var(--accentHot-rgb),0.24)" />
           </filter>
 
           {/* Dotted grid */}
           <pattern id={dotGridId} width="10" height="10" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="0.6" fill="rgba(255,255,255,0.14)" />
+            <circle cx="1.5" cy="1.5" r="0.6" fill="rgba(255,255,255,0.10)" />
           </pattern>
 
           {/* Area fill */}
           <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--forge-red-top, #ff3a2a)" stopOpacity="0.14" />
+            <stop offset="0%" stopColor="var(--accentGlow)" stopOpacity="0.08" />
             <stop offset="100%" stopColor={NEON} stopOpacity="0.00" />
           </linearGradient>
 
           {/* Line gradient */}
           <linearGradient id={lineId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="var(--forge-red-top, #ff3a2a)" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="var(--forge-red, #e11d2a)" stopOpacity="1" />
-            <stop offset="100%" stopColor="var(--forge-red-bottom, #7a0f16)" stopOpacity="0.92" />
+            <stop offset="0%" stopColor="var(--accentGlow)" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="var(--accentHot)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--accentHot)" stopOpacity="0.92" />
           </linearGradient>
 
           {/* Bar fill + subtle forge glow (match .forgeMeterFill) */}
           <linearGradient id={barFillId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--forge-red-top)" />
-            <stop offset="50%" stopColor="var(--red)" />
-            <stop offset="100%" stopColor="var(--forge-red-bottom)" />
+            <stop offset="0%" stopColor="var(--accentGlow)" stopOpacity="0.92" />
+            <stop offset="22%" stopColor="var(--accentHot)" stopOpacity="1" />
+            <stop offset="100%" stopColor="var(--accentHot)" stopOpacity="0.98" />
           </linearGradient>
           <filter id={barGlowId} x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="0" stdDeviation="0.8" floodColor="var(--forge-red-hot)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="1.8" floodColor="var(--forge-red-mid)" />
-            <feDropShadow dx="0" dy="0" stdDeviation="2.8" floodColor="var(--forge-red-deep)" />
+            <feDropShadow dx="0" dy="0.3" stdDeviation="0.7" floodColor="rgba(var(--accentGlow-rgb),0.30)" />
+            <feDropShadow dx="0" dy="0.7" stdDeviation="1.2" floodColor="rgba(var(--accentHot-rgb),0.18)" />
           </filter>
 
           {/* Clip to inner plot */}
@@ -380,14 +374,14 @@ export function MiniLineChart({
               width={innerW}
               height={innerH}
               fill={`url(#${dotGridId})`}
-              opacity="0.30"
+              opacity="0.22"
             />
           </g>
         ) : null}
 
         {/* Active spotlight */}
         {activeBar ? (
-          <rect x={activeBar.x} y={0} width={activeBar.w} height={100} fill={NEON_TINT} opacity="0.35" />
+          <rect x={activeBar.x} y={0} width={activeBar.w} height={100} fill={NEON_TINT} opacity="0.24" />
         ) : null}
 
         {mode === "bar" ? (
@@ -407,7 +401,7 @@ export function MiniLineChart({
                   ry={topRadius}
                   fill={`url(#${barFillId})`}
                   filter={`url(#${barGlowId})`}
-                  opacity={isActive ? 1 : 0.92}
+                  opacity={isActive ? 1 : 0.96}
                 />
               );
             })}
@@ -424,7 +418,7 @@ export function MiniLineChart({
                     const p = plotPoints[i];
                     return (
                       <g key={`hi-${i}`}>
-                        <circle cx={p.x} cy={p.y} r={6.6} fill={NEON_SOFT} opacity="0.22" />
+                        <circle cx={p.x} cy={p.y} r={5.8} fill={NEON_SOFT} opacity="0.16" />
                         <circle cx={p.x} cy={p.y} r={2.4} fill={NEON} filter={`url(#${neonGlowId})`} />
                       </g>
                     );
@@ -438,13 +432,13 @@ export function MiniLineChart({
                   y1={PAD_Y}
                   x2={activePt.x}
                   y2={baseY}
-                  stroke="rgba(255,255,255,0.22)"
+                  stroke="rgba(237,237,237,0.30)"
                   strokeWidth="0.8"
-                  opacity="0.9"
+                  opacity="0.7"
                 />
                 <circle cx={activePt.x} cy={activePt.y} r={2.9} fill="rgba(0,0,0,0.55)" />
                 <circle cx={activePt.x} cy={activePt.y} r={2.2} fill={NEON} filter={`url(#${neonGlowId})`} />
-                <circle cx={activePt.x} cy={activePt.y} r={6.2} fill={NEON_SOFT} opacity="0.35" />
+                <circle cx={activePt.x} cy={activePt.y} r={5.4} fill={NEON_SOFT} opacity="0.22" />
               </>
             ) : null}
 
@@ -453,10 +447,10 @@ export function MiniLineChart({
                 d={linePath}
                 fill="none"
                 stroke={NEON}
-                strokeWidth="6"
+                strokeWidth="4.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                opacity="0.16"
+                opacity="0.12"
                 filter={`url(#${neonGlowId})`}
               />
             ) : null}
@@ -528,8 +522,8 @@ export function MiniLineChart({
             right: 10,
             bottom: 8,
             fontSize: 11,
-            color: "rgba(255,255,255,0.62)",
-            opacity: 0.9,
+            color: "var(--muted)",
+            opacity: 0.82,
             userSelect: "none",
           }}
         >

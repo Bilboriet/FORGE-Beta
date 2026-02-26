@@ -47,17 +47,17 @@ function levelColor(level: number) {
   // Keep Forge vibe: muted dark -> deep red
   switch (level) {
     case 0:
-      return "rgba(255,255,255,0.06)";
+      return "var(--surface2)";
     case 1:
-      return "rgba(220,38,38,0.25)";
+      return "rgba(var(--accentHot-rgb),0.18)";
     case 2:
-      return "rgba(220,38,38,0.45)";
+      return "rgba(var(--accentHot-rgb),0.30)";
     case 3:
-      return "rgba(220,38,38,0.65)";
+      return "rgba(var(--accentHot-rgb),0.44)";
     case 4:
-      return "rgba(220,38,38,0.85)";
+      return "rgba(var(--accentHot-rgb),0.58)";
     default:
-      return "rgba(255,255,255,0.06)";
+      return "var(--surface2)";
   }
 }
 
@@ -284,7 +284,7 @@ export function ConsistencyHeatmap({ days, range, onRangeChange, showSessionDot 
                     const isEmpty = !d;
                     const isActive = d && active?.dateISO === d.dateISO;
 
-                    const bg = isEmpty ? "rgba(255,255,255,0.04)" : levelColor(d!.level);
+                    const bg = isEmpty ? "var(--surface2)" : levelColor(d!.level);
 
                     return (
                       <button
@@ -303,7 +303,7 @@ export function ConsistencyHeatmap({ days, range, onRangeChange, showSessionDot 
                           width: cellSize,
                           height: cellSize,
                           borderRadius: 4,
-                          border: isActive ? "1px solid rgba(255,255,255,0.65)" : "1px solid rgba(0,0,0,0)",
+                          border: isActive ? "1px solid var(--text)" : "1px solid rgba(0,0,0,0)",
                           background: bg,
                           padding: 0,
                           position: "relative",
@@ -337,3 +337,4 @@ export function ConsistencyHeatmap({ days, range, onRangeChange, showSessionDot 
     </div>
   );
 }
+

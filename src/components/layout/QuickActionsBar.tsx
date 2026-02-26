@@ -25,7 +25,7 @@ export function ShortcutsBar({ hasSessions }: { hasSessions?: boolean }) {
     padding: "8px 12px",
     borderRadius: 12,
     border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.04)",
+    background: "var(--surface2)",
     color: "var(--text)",
     cursor: "pointer",
     fontWeight: 850,
@@ -35,7 +35,7 @@ export function ShortcutsBar({ hasSessions }: { hasSessions?: boolean }) {
 
   const primary: CSSProperties = {
     ...btnBase,
-    border: "1px solid rgba(255,59,59,0.55)",
+    border: "1px solid rgba(var(--accentHot-rgb),0.55)",
     background: "var(--redSoft)",
     color: "var(--red)",
   };
@@ -53,7 +53,7 @@ export function ShortcutsBar({ hasSessions }: { hasSessions?: boolean }) {
         padding: 12,
         borderRadius: 16,
         border: "1px solid var(--border)",
-        background: "rgba(255,255,255,0.04)",
+        background: "var(--surface2)",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",

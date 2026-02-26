@@ -83,7 +83,7 @@ export function WidgetFrame({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,
@@ -105,7 +105,7 @@ export function WidgetFrame({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,
@@ -125,7 +125,7 @@ export function WidgetFrame({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,
@@ -145,7 +145,7 @@ export function WidgetFrame({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,
@@ -165,7 +165,7 @@ export function WidgetFrame({
                 style={{
                   borderRadius: 999,
                   border: "1px solid var(--border)",
-                  background: "rgba(255,255,255,0.04)",
+                  background: "var(--surface2)",
                   color: "var(--muted)",
                   fontSize: 11,
                   fontWeight: 900,

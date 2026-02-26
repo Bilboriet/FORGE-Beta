@@ -4,6 +4,7 @@ import { registerSW } from "virtual:pwa-register";
 import "./index.css";
 import App from "./App.tsx";
 import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
+import { initTheme } from "./theme/v2";
 
 console.log("FORGE MAIN LOADED");
 const hasWindow = typeof window !== "undefined";
@@ -37,8 +38,8 @@ function reportGlobalError(tag: string, payload: unknown) {
     transform: "translateX(-50%)",
     zIndex: "2147483647",
     background: "rgba(20,0,0,0.92)",
-    color: "#ffb4b4",
-    border: "1px solid rgba(225,29,42,0.55)",
+    color: "var(--text)",
+    border: "1px solid rgba(var(--accentHot-rgb),0.55)",
     borderRadius: "999px",
     padding: "6px 12px",
     fontSize: "12px",
@@ -66,6 +67,20 @@ if (hasWindow) {
 }
 
 if (hasNavigator && "serviceWorker" in navigator) {
+  // Remove legacy hand-written /sw.js registrations that may cache auth callback aggressively.
+  navigator.serviceWorker.getRegistrations().then((regs) => {
+    regs.forEach((reg) => {
+      const script =
+        reg.active?.scriptURL ?? reg.waiting?.scriptURL ?? reg.installing?.scriptURL ?? "";
+      if (script.endsWith("/sw.js") && !script.includes("workbox")) {
+        void reg.unregister();
+        if (import.meta.env.DEV) {
+          console.info("[FORGE][SW][DEV] unregistered legacy sw.js", { script });
+        }
+      }
+    });
+  });
+
   registerSW({
     immediate: true,
     onNeedRefresh() {
@@ -87,6 +102,8 @@ if (hasNavigator && "serviceWorker" in navigator) {
     },
   });
 }
+
+initTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

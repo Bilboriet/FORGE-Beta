@@ -7,6 +7,7 @@ import { LS_KEYS } from "../constants";
 import { CollapsibleSection } from "../components/ui/CollapsibleSection";
 import AccountSection from "../components/AccountSection";
 import { ForgeButton } from "../components/ui/ForgeButton";
+import { getTheme, setTheme, type ThemeName } from "../theme/v2";
 
 
 const LS_ANALYTICS_EX = "forge:analytics_exercise_v1";
@@ -110,6 +111,7 @@ function SelectRow({
 export function SettingsPage() {
   const t = useT();
   const [settings, setSettings] = useForgeSettings();
+  const [themeName, setThemeName] = useState<ThemeName>(() => getTheme());
   const appVersion = (import.meta.env.VITE_APP_VERSION as string | undefined)?.trim() || "beta";
 
   // pull some core data counts for a "status" card
@@ -354,7 +356,7 @@ export function SettingsPage() {
         padding: 12,
         borderRadius: 14,
         border: "1px solid var(--border)",
-        background: "rgba(255,255,255,0.04)",
+        background: "var(--surface2)",
         color: "var(--text)",
         fontWeight: 850,
       }}
@@ -402,6 +404,27 @@ export function SettingsPage() {
           {t("settings.storage.note2")}
         </div>
       </Card>
+
+      {import.meta.env.DEV ? (
+        <Card title="ThemeLab (DEV)" subtitle="V2 palette switcher for design testing only">
+          <SelectRow
+            label="Palette"
+            value={themeName}
+            onChange={(v) => {
+              const next = v === "plasmaRed" ? "plasmaRed" : "baseNeutral";
+              setThemeName(next);
+              setTheme(next);
+            }}
+            options={[
+              { value: "baseNeutral", label: "Base Neutral" },
+              { value: "plasmaRed", label: "Plasma Red" },
+            ]}
+          />
+          <div style={{ color: "var(--muted)", fontSize: 12, lineHeight: 1.35 }}>
+            Stored in <span style={{ color: "var(--text)", fontWeight: 900 }}>forge:theme_v2</span> while in dev mode.
+          </div>
+        </Card>
+      ) : null}
     </div>
   );
 
@@ -414,15 +437,15 @@ export function SettingsPage() {
           gap: 10,
         }}
       >
-        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "rgba(0,0,0,0.18)" }}>
+        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "var(--surface2)" }}>
           <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>{t("settings.dataStatus.sessions").toUpperCase()}</div>
           <div style={{ color: "var(--text)", fontWeight: 950, fontSize: 18 }}>{stats.sessions}</div>
         </div>
-        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "rgba(0,0,0,0.18)" }}>
+        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "var(--surface2)" }}>
           <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>{t("settings.dataStatus.meals").toUpperCase()}</div>
           <div style={{ color: "var(--text)", fontWeight: 950, fontSize: 18 }}>{stats.meals}</div>
         </div>
-        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "rgba(0,0,0,0.18)" }}>
+        <div style={{ padding: 12, borderRadius: 14, border: "1px solid var(--border)", background: "var(--surface2)" }}>
           <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>{t("settings.dataStatus.sleep").toUpperCase()}</div>
           <div style={{ color: "var(--text)", fontWeight: 950, fontSize: 18 }}>{stats.sleep}</div>
         </div>

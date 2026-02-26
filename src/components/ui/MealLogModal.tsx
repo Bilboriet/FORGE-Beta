@@ -75,7 +75,7 @@ export function MealLogModal({
         }}
         style={{
           border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.04)",
+          background: "var(--surface2)",
           color: "var(--text)",
           borderRadius: 14,
           padding: "10px 12px",
@@ -88,8 +88,8 @@ export function MealLogModal({
       <button
         onClick={save}
         style={{
-          border: "1px solid rgba(255,59,59,0.35)",
-          background: "rgba(255,59,59,0.14)",
+          border: "1px solid rgba(var(--accentHot-rgb),0.35)",
+          background: "rgba(var(--accentHot-rgb),0.14)",
           color: "var(--text)",
           borderRadius: 14,
           padding: "10px 12px",
@@ -121,7 +121,7 @@ export function MealLogModal({
           padding: 12,
           borderRadius: 14,
           border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.04)",
+          background: "var(--surface2)",
           display: "grid",
           gap: 6,
         }}
@@ -158,7 +158,7 @@ export function MealLogModal({
           padding: 12,
           borderRadius: 14,
           border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.04)",
+          background: "var(--surface2)",
           display: "grid",
           gap: 6,
         }}
