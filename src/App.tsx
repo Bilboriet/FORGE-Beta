@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BottomNav, type TabKey } from "./components/layout/BottomNav";
 import { PageMotion } from "./components/layout/Pagemotion";
-import { Modal } from "./components/ui/Modal";
 import { useT } from "./hooks/useT";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LogPage } from "./pages/LogPage";
@@ -168,25 +167,22 @@ export default function App() {
 
       <BottomNav active={tab} onChange={setTab} hasDraft={hasDraft} />
 
-      <Modal
-        open={startupNoticeOpen}
-        onClose={() => setStartupNoticeOpen(false)}
-        title="Notice"
-        widthPx={560}
-        closeOnTabChange={false}
-        footer={(
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className="forge-btn forge-btn--hot" onClick={() => setStartupNoticeOpen(false)}>
-              OK
-            </button>
-          </div>
-        )}
-      >
-        <div style={{ color: "var(--text)", lineHeight: 1.5 }}>
-          The Forge is under development. Everything may and will change. WARNING. Frequently back up
-          your workout to cloud in settings!
+      {startupNoticeOpen ? (
+        <div className="forge-introOverlay" role="dialog" aria-modal="true" aria-label="Notice">
+          <section className="forge-introPanel">
+            <h2 className="forge-introTitle">Notice</h2>
+            <p className="forge-introText">
+              The Forge is under development. Everything may and will change. WARNING. Frequently back
+              up your workout to cloud in settings!
+            </p>
+            <div className="forge-introActions">
+              <button className="forge-btn forge-btn--hot" onClick={() => setStartupNoticeOpen(false)}>
+                OK
+              </button>
+            </div>
+          </section>
         </div>
-      </Modal>
+      ) : null}
     </div>
   );
 }
