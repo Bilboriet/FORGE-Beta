@@ -4,6 +4,7 @@ import { registerSW } from "virtual:pwa-register";
 import "./index.css";
 import App from "./App.tsx";
 import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
+import StimulusValidationPageV2 from "./pages/StimulusValidationPageV2.tsx";
 import { initTheme } from "./theme/v2";
 
 console.log("FORGE MAIN LOADED");
@@ -107,6 +108,12 @@ initTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {hasWindow && window.location.pathname === "/auth/callback" ? <AuthCallbackPage /> : <App />}
+    {hasWindow && window.location.pathname === "/auth/callback" ? (
+      <AuthCallbackPage />
+    ) : hasWindow && window.location.pathname === "/dev/stimulus-v2" ? (
+      <StimulusValidationPageV2 />
+    ) : (
+      <App />
+    )}
   </StrictMode>
 );

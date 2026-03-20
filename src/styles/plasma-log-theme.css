@@ -1,0 +1,74 @@
+:root {
+  --plasma-log-bg-0: oklch(7% 0.01 265);
+  --plasma-log-bg-1: oklch(10% 0.013 265);
+  --plasma-log-bg-2: oklch(14% 0.016 268);
+
+  --plasma-log-surface-hero: oklch(23% 0.018 262 / 0.9);
+  --plasma-log-surface-section: oklch(19% 0.014 262 / 0.86);
+  --plasma-log-surface-card: oklch(25% 0.018 262 / 0.74);
+  --plasma-log-surface-row: oklch(15% 0.012 262 / 0.82);
+
+  --plasma-log-text-strong: oklch(95% 0.01 265);
+  --plasma-log-text-base: oklch(84% 0.012 265);
+  --plasma-log-text-soft: oklch(68% 0.01 265);
+  --plasma-log-text-faint: oklch(60% 0.01 265);
+
+  --plasma-log-border-soft: rgb(255 255 255 / 0.12);
+  --plasma-log-border-base: rgb(255 255 255 / 0.18);
+  --plasma-log-border-strong: rgb(255 255 255 / 0.22);
+
+  --plasma-log-plasma-core: oklch(62% 0.23 24);
+  --plasma-log-plasma-hot: oklch(68% 0.19 32);
+  --plasma-log-plasma-seam: oklch(54% 0.18 20 / 0.55);
+  --plasma-log-plasma-fade: oklch(40% 0.12 18 / 0.14);
+  --plasma-log-plasma-amber: oklch(74% 0.15 58 / 0.18);
+
+  --plasma-log-focus: color-mix(in oklch, var(--plasma-log-plasma-core) 42%, white 18%);
+
+  --plasma-log-radius-hero: 30px;
+  --plasma-log-radius-card: 24px;
+  --plasma-log-radius-control: 16px;
+  --plasma-log-radius-pill: 999px;
+
+  --plasma-log-blur-surface: 16px;
+  --plasma-log-blur-card: 10px;
+  --plasma-log-blur-control: 6px;
+
+  --plasma-log-shadow-hero:
+    0 28px 64px rgb(0 0 0 / 0.44),
+    0 10px 26px rgb(0 0 0 / 0.22),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --plasma-log-shadow-section:
+    0 18px 40px rgb(0 0 0 / 0.3),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --plasma-log-shadow-card:
+    0 14px 30px rgb(0 0 0 / 0.26),
+    0 1px 0 rgb(255 255 255 / 0.04) inset;
+  --plasma-log-shadow-control:
+    0 8px 18px rgb(0 0 0 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --plasma-log-shadow-button:
+    0 10px 24px rgb(0 0 0 / 0.24),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+
+  --plasma-log-shine-top: rgb(255 255 255 / 0.1);
+  --plasma-log-shine-mid: rgb(255 255 255 / 0.035);
+  --plasma-log-shine-ridge: rgb(255 255 255 / 0.08);
+}
+
+.plasma-log-theme {
+  color: var(--plasma-log-text-base);
+  background:
+    radial-gradient(1100px 620px at 14% 4%, var(--plasma-log-plasma-amber), transparent 56%),
+    radial-gradient(960px 580px at 84% 8%, color-mix(in oklch, var(--plasma-log-plasma-core) 16%, transparent), transparent 58%),
+    linear-gradient(180deg, var(--plasma-log-bg-2) 0%, var(--plasma-log-bg-1) 44%, var(--plasma-log-bg-0) 100%);
+  background-color: var(--plasma-log-bg-0);
+}
+
+@media (color-gamut: p3) {
+  :root {
+    --plasma-log-plasma-core: color(display-p3 0.96 0.19 0.24);
+    --plasma-log-plasma-hot: color(display-p3 0.98 0.34 0.24);
+    --plasma-log-plasma-seam: color(display-p3 0.85 0.14 0.18 / 0.55);
+  }
+}

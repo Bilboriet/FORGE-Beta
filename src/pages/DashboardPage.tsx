@@ -1,6 +1,7 @@
 // src/pages/DashboardPage.tsx
 import { useCallback, useMemo, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useExercisePreferences } from "../hooks/useExercisePreferences";
 import { useForgeSettings } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
 import type { WorkoutSession } from "../types";
@@ -8,7 +9,11 @@ import { workoutVolume, sortByDateDesc } from "../utils";
 import { LS_KEYS } from "../constants";
 import { WidgetBoard } from "../components/layout/WidgetBoard";
 import { ConsistencyHeatmap } from "../components/charts/ConsistencyHeatmap";
+import { CoachCard } from "../components/ui/CoachCard";
+import { exerciseDatabase } from "../data/exerciseDatabase";
+import { DEFAULT_MUSCLE_TARGETS_V2, resolveMuscleTargetRangesV2 } from "../data/muscleTargetsV2";
 import { buildHeatmapDays, computeCurrentStreak } from "../utils/consistency";
+import { buildWeeklyCoachInsightSnapshotV2 } from "../features/coach/application/buildWeeklyCoachInsightSnapshotV2";
 import { formatLoadCompactFromKg } from "../units";
 
 function isoToDate(iso: string) {
@@ -35,6 +40,54 @@ function clamp(n: number) {
 
 function estimate1RM_Epley(weightKg: number, reps: number) {
   return weightKg * (1 + reps / 30);
+}
+
+function buildCoachExerciseCatalogFromDatabase() {
+  const entries = new Map<
+    string,
+    {
+      exerciseId: string;
+      exerciseName: string;
+      muscleId: string;
+      prescriptionWeight: number;
+      redundancyGroup: string | null;
+    }
+  >();
+
+  for (const entry of exerciseDatabase) {
+    for (const muscleId of entry.primaryAnalysisTargets ?? []) {
+      const key = `${entry.id}::${muscleId}`;
+      const previous = entries.get(key);
+      const next = {
+        exerciseId: entry.id,
+        exerciseName: entry.displayName,
+        muscleId,
+        prescriptionWeight: Math.max(previous?.prescriptionWeight ?? 0, 1),
+        redundancyGroup: entry.movementTemplate ?? null,
+      };
+      entries.set(key, next);
+    }
+
+    for (const muscleId of entry.secondaryAnalysisTargets ?? []) {
+      const key = `${entry.id}::${muscleId}`;
+      const previous = entries.get(key);
+      const next = {
+        exerciseId: entry.id,
+        exerciseName: entry.displayName,
+        muscleId,
+        prescriptionWeight: Math.max(previous?.prescriptionWeight ?? 0, 0.55),
+        redundancyGroup: entry.movementTemplate ?? null,
+      };
+      entries.set(key, next);
+    }
+  }
+
+  return Array.from(entries.values()).sort(
+    (a, b) =>
+      a.muscleId.localeCompare(b.muscleId) ||
+      a.exerciseName.localeCompare(b.exerciseName) ||
+      a.exerciseId.localeCompare(b.exerciseId)
+  );
 }
 
 /**
@@ -104,6 +157,7 @@ function BarRow({
 export function DashboardPage() {
   const [sessions] = useLocalStorage<WorkoutSession[]>(LS_KEYS.sessions, []);
   const [settings] = useForgeSettings();
+  const { favoriteIds, recentIds } = useExercisePreferences();
   const t = useT();
   const units = settings?.units ?? "kg";
 
@@ -116,6 +170,24 @@ export function DashboardPage() {
 
   const sessionsDesc = useMemo(() => sortByDateDesc(sessions), [sessions]);
   const sessionsAsc = useMemo(() => [...sessionsDesc].reverse(), [sessionsDesc]);
+  const weeklySessions = useMemo(
+    () => sessionsAsc.filter((session) => withinLastDays(session.date, 7)),
+    [sessionsAsc]
+  );
+  const coachExerciseCatalog = useMemo(() => buildCoachExerciseCatalogFromDatabase(), []);
+  const coachTargets = useMemo(() => resolveMuscleTargetRangesV2(DEFAULT_MUSCLE_TARGETS_V2), []);
+  const coachSnapshot = useMemo(
+    () =>
+      buildWeeklyCoachInsightSnapshotV2({
+        sessions: weeklySessions,
+        targets: coachTargets,
+        exerciseCatalog: coachExerciseCatalog,
+        favoriteExerciseIds: favoriteIds,
+        recentlyUsedExerciseIds: recentIds,
+        generatedAt: "dashboard",
+      }),
+    [coachExerciseCatalog, coachTargets, favoriteIds, recentIds, weeklySessions]
+  );
 
   const stats = useMemo(() => {
     const total = sessionsAsc.length;
@@ -343,6 +415,87 @@ export function DashboardPage() {
         canWiden: true,
       },
       {
+        id: "coach_insights",
+        title: "FORGE COACH",
+        subtitle: "Snapshot-driven weekly insight",
+        render: () => (
+          <div style={{ display: "grid", gap: 12 }}>
+            <CoachCard
+              title="Coach Insights"
+              status={`${coachSnapshot.summary.actionableCount} actionable`}
+              metaRight={`${Math.round(coachSnapshot.totalStimulus)}`}
+            >
+              <div style={{ display: "grid", gap: 10 }}>
+                <div
+                  className="forgeInnerPlate"
+                  style={{
+                    padding: 12,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                    gap: 8,
+                  }}
+                >
+                  <div>
+                    <div className="kpiLabel">Under</div>
+                    <div className="kpiValue" style={{ fontSize: 18 }}>{coachSnapshot.summary.underMuscles}</div>
+                  </div>
+                  <div>
+                    <div className="kpiLabel">Balanced</div>
+                    <div className="kpiValue" style={{ fontSize: 18 }}>{coachSnapshot.summary.balancedMuscles}</div>
+                  </div>
+                  <div>
+                    <div className="kpiLabel">Over</div>
+                    <div className="kpiValue" style={{ fontSize: 18 }}>{coachSnapshot.summary.overMuscles}</div>
+                  </div>
+                </div>
+
+                {coachSnapshot.topPriorities.length > 0 ? (
+                  coachSnapshot.topPriorities.slice(0, 3).map((priority) => (
+                    <div
+                      key={priority.muscleId}
+                      className="forgeInnerPlate"
+                      style={{ padding: 12, display: "grid", gap: 6, borderRadius: 14 }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline" }}>
+                        <div style={{ fontWeight: 900 }}>{priority.headline}</div>
+                        <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                          {priority.totalSuggestedSetChange > 0 ? "+" : ""}
+                          {priority.totalSuggestedSetChange} sets
+                        </div>
+                      </div>
+                      <div style={{ color: "var(--muted)", fontSize: 13 }}>{priority.summary}</div>
+                      {priority.exercises.length > 0 ? (
+                        <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                          {priority.exercises
+                            .slice(0, 2)
+                            .map((exercise) => `${exercise.exerciseName} (${exercise.displayText.toLowerCase()})`)
+                            .join(" • ")}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))
+                ) : (
+                  <div className="forgeInnerPlate" style={{ padding: 12, color: "var(--muted)", borderRadius: 14 }}>
+                    No actionable priorities yet. Snapshot is active and ready for explicit muscle targets.
+                  </div>
+                )}
+              </div>
+            </CoachCard>
+          </div>
+        ),
+        renderMin: () => (
+          <div style={{ display: "grid", gap: 6 }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ color: "var(--muted)" }}>Actionable</div>
+              <div style={{ fontWeight: 900 }}>{coachSnapshot.summary.actionableCount}</div>
+            </div>
+            <div style={{ color: "var(--muted)", fontSize: 12 }}>
+              {coachSnapshot.topPriorities[0]?.headline ?? "No active priority"}
+            </div>
+          </div>
+        ),
+      },
+      {
         id: "kpis",
         title: t("dashboard.cards.weekSummary.title"),
         subtitle: t("dashboard.cards.weekSummary.subtitle"),
@@ -497,7 +650,7 @@ export function DashboardPage() {
         ),
       },
     ];
-  }, [hasSessions, stats, t, heatmapDays, heatmapRange, currentStreak, fmtLoad]);
+  }, [coachSnapshot, hasSessions, stats, t, heatmapDays, heatmapRange, currentStreak, fmtLoad]);
 
   const presets = useMemo(() => {
     function buildDefault(defs: typeof widgets) {

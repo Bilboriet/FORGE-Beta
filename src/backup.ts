@@ -8,7 +8,6 @@ export const LS_EXTRA_KEYS = {
   settings_v1: "forge:settings_v1",
   analytics_exercise_v1: "forge:analytics_exercise_v1",
   analytics_fatigue_scope_v1: "forge:analytics_fatigue_scope_v1",
-  exercise_filter_presets_v1: "exercise_filter_presets_v1",
 } as const;
 
 export type ForgeBackupV1 = {

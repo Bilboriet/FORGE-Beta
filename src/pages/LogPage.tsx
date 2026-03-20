@@ -1,12 +1,20 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
-import { EXERCISE_LIBRARY } from "../exerciseLibrary";
 import { ExercisePickerModal } from "../components/ui/ExercisePickerModal";
 import { ForgeButton } from "../components/ui/ForgeButton";
+import { exerciseDatabaseRefs } from "../data/exerciseDatabase";
+import { createWorkoutSessionWithLockedBodyMetricsV2 } from "../data/bodyMetricsSnapshotV2";
+import { useBodyMetricsV2 } from "../hooks/useBodyMetricsV2";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useForgeSettings } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
 import { CoachCard } from "../components/ui/CoachCard";
-import type { ExerciseBlock, ExerciseRef, SetLog, WorkoutSession, WorkoutTemplate } from "../types";
+import type {
+  ExerciseBlock,
+  ExerciseRef,
+  SetLog,
+  WorkoutSession,
+  WorkoutTemplate,
+} from "../types";
 import { estimate1RM_Epley, sortByDateDesc, workoutVolume } from "../utils";
 import { LS_KEYS } from "../constants";
 import { formatWeightFromKg, formatLoadCompactFromKg, parseWeightInputToKg, unitLabel } from "../units";
@@ -32,7 +40,6 @@ function createEmptyWorkout(): WorkoutSession {
     exercises: [],
   };
 }
-
 
 /** -----------------------------
  * PR helpers (local-only)
@@ -259,6 +266,8 @@ function buildAggregateToast(
 
 export function LogPage() {
   const t = useT();
+  const v2ExerciseLibrary = useMemo<ExerciseRef[]>(() => exerciseDatabaseRefs, []);
+  const [bodyMetrics] = useBodyMetricsV2();
   const [sessions, setSessions] = useLocalStorage<WorkoutSession[]>(LS_KEYS.sessions, []);
   const [draft, setDraft] = useLocalStorage<WorkoutSession | null>(LS_KEYS.log_draft_v1, null);
   const [sleep, setSleep] = useLocalStorage<any[]>(LS_KEYS.sleep_v1, []);
@@ -296,7 +305,7 @@ const [pickerOpen, setPickerOpen] = useState(false);
     }
   }, [pickerOpen]);
   const [pickedExercise, setPickedExercise] = useState<ExerciseRef | null>(
-    EXERCISE_LIBRARY[0] ?? null
+    v2ExerciseLibrary[0] ?? null
   );
 
   const [prToast, setPrToast] = useState<PRToast | null>(null);
@@ -404,9 +413,9 @@ const safeSessions = useMemo(() => (Array.isArray(sessions) ? sessions : []), [s
   const recentSessions = useMemo(() => sortedSessions.slice(0, 5), [sortedSessions]);
   const exerciseById = useMemo(() => {
     const m = new Map<string, ExerciseRef>();
-    for (const ex of EXERCISE_LIBRARY) m.set(ex.id, ex);
+    for (const ex of v2ExerciseLibrary) m.set(ex.id, ex);
     return m;
-  }, []);
+  }, [v2ExerciseLibrary]);
 
   const prSessionIds = useMemo(() => computeSessionPRFlags(safeSessions), [safeSessions]);
 
@@ -653,9 +662,11 @@ function addExerciseBlock(exercise: ExerciseRef) {
       setPrToast(null);
     }
 
+    const nextWorkout = createWorkoutSessionWithLockedBodyMetricsV2(workout, bodyMetrics);
+
     setSessions((prev) => {
       const arr = Array.isArray(prev) ? prev : [];
-      return sortByDateDesc([{ ...workout }, ...arr]);
+      return sortByDateDesc([nextWorkout, ...arr]);
     });
 
     setDraft(null);
@@ -1014,7 +1025,6 @@ function addExerciseBlock(exercise: ExerciseRef) {
       <ExercisePickerModal
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
-        exercises={EXERCISE_LIBRARY}
         placement="top"
         variant="inline"
         onPick={(ex) => {
@@ -1368,7 +1378,6 @@ function addExerciseBlock(exercise: ExerciseRef) {
           <ExercisePickerModal
             open={templatePickerOpen}
             onClose={() => setTemplatePickerOpen(false)}
-            exercises={EXERCISE_LIBRARY}
             onPick={(ex) => {
               addExerciseToTemplate(ex);
               setTemplatePickerOpen(false);

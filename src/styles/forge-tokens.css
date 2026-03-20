@@ -1,0 +1,1110 @@
+:root {
+  --forge-bg: 6 7 11;
+  --forge-surface: 12 16 24;
+  --forge-glass: 32 42 58;
+  --forge-border: 255 255 255;
+  --forge-fg: 235 240 247;
+  --forge-muted: 160 170 185;
+
+  --forge-red: 255 45 85;
+  --forge-orange: 255 138 0;
+
+  --shadow-forge-card:
+    0 28px 70px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 22px rgba(var(--forge-orange), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-forge-hero:
+    0 40px 90px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 0 38px rgba(var(--forge-orange), 0.12),
+    0 0 60px rgba(var(--forge-red), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-forge-glow-red:
+    0 0 0 1px rgba(var(--forge-red), 0.16),
+    0 0 28px rgba(var(--forge-red), 0.25);
+  --shadow-forge-glow-orange:
+    0 0 0 1px rgba(var(--forge-orange), 0.18),
+    0 0 32px rgba(var(--forge-orange), 0.3);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes forgeOverlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes forgePanelSlideRight {
+  from {
+    opacity: 0;
+    transform: translate3d(40px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes forgeSheetSlideBottom {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes forgePopIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.forge-app-bg {
+  background-color: rgb(var(--forge-bg));
+  background-image:
+    radial-gradient(960px 540px at 50% 8%, rgba(var(--forge-orange), 0.12), transparent 58%),
+    radial-gradient(760px 440px at 10% -10%, rgba(var(--forge-orange), 0.14), transparent 62%),
+    radial-gradient(700px 500px at 92% 8%, rgba(var(--forge-red), 0.12), transparent 60%),
+    radial-gradient(1200px 800px at 50% 120%, rgba(0, 0, 0, 0.32), transparent 55%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.26) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 34%),
+    linear-gradient(180deg, rgba(18, 22, 33, 0.32) 0%, rgba(8, 10, 15, 0.88) 54%, rgba(3, 4, 7, 1) 100%);
+  color: rgb(var(--forge-fg));
+}
+
+.forge-v2-page {
+  min-height: calc(100vh - 8rem);
+  padding: 1rem 0 5.5rem;
+}
+
+.forge-v2-shell {
+  width: min(1180px, calc(100vw - 1.25rem));
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.forge-v2-header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.1rem;
+  align-items: end;
+  padding-bottom: 1rem;
+}
+
+.forge-v2-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(var(--forge-red), 0.6),
+    rgba(var(--forge-orange), 0.42),
+    transparent
+  );
+  opacity: 0.72;
+}
+
+.forge-v2-kicker {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(var(--forge-orange), 0.96);
+}
+
+.forge-v2-title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.3rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+  text-shadow: 0 10px 34px rgba(0, 0, 0, 0.38);
+}
+
+.forge-v2-subtitle {
+  max-width: 42rem;
+  margin: 0.7rem 0 0;
+  color: rgba(var(--forge-muted), 0.95);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.forge-v2-badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.forge-v2-badge {
+  padding: 0.6rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--forge-border), 0.09);
+  background: linear-gradient(180deg, rgba(var(--forge-glass), 0.42), rgba(var(--forge-surface), 0.48));
+  backdrop-filter: blur(14px);
+  color: rgb(var(--forge-fg));
+  box-shadow: var(--shadow-forge-card);
+  font-size: 0.83rem;
+}
+
+.forge-v2-card {
+  position: relative;
+  overflow: visible;
+}
+
+.forge-v2-hero {
+  padding: 18px;
+  animation: forgePopIn 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forge-v2-hero::before {
+  content: "";
+  position: absolute;
+  left: 1.1rem;
+  right: 1.1rem;
+  top: 0;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(var(--forge-orange), 0.58),
+    rgba(var(--forge-red), 0.24),
+    transparent
+  );
+  box-shadow: 0 0 16px rgba(var(--forge-orange), 0.2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.forge-v2-heroGlow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(32px);
+  pointer-events: none;
+}
+
+.forge-v2-heroGlow.is-orange {
+  top: -5rem;
+  left: -4rem;
+  width: 15rem;
+  height: 15rem;
+  background: radial-gradient(circle, rgba(var(--forge-orange), 0.22) 0%, rgba(var(--forge-orange), 0.08) 42%, transparent 72%);
+}
+
+.forge-v2-heroGlow.is-red {
+  top: -4.5rem;
+  right: -4rem;
+  width: 14rem;
+  height: 14rem;
+  background: radial-gradient(circle, rgba(var(--forge-red), 0.18) 0%, rgba(var(--forge-red), 0.08) 45%, transparent 74%);
+}
+
+.forge-v2-heroInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.forge-v2-heroTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.forge-v2-metaLabel {
+  display: block;
+  margin-bottom: 0.38rem;
+  color: rgba(var(--forge-muted), 0.88);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.forge-v2-date {
+  color: rgba(var(--forge-fg), 0.78);
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.forge-v2-titleInput {
+  width: min(26rem, 100%);
+  min-height: 48px;
+  padding: 0 0 0 2px;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--forge-fg));
+  font: inherit;
+  font-size: clamp(1.75rem, 4vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
+}
+
+.forge-v2-titleInput::placeholder,
+.forge-v2-input::placeholder {
+  color: rgba(var(--forge-muted), 0.72);
+}
+
+.forge-v2-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.forge-v2-stat {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(var(--forge-border), 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.forge-v2-statValue {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.forge-v2-save {
+  align-self: start;
+  min-height: 3.2rem;
+  padding: 1rem 1.35rem;
+  border: 0;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(var(--forge-orange), 0.96), rgba(var(--forge-red), 0.88));
+  color: rgb(21 12 8);
+  font-size: 0.98rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  box-shadow:
+    var(--shadow-forge-glow-orange),
+    0 22px 50px rgba(255, 107, 10, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+.forge-v2-save:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow:
+    var(--shadow-forge-glow-orange),
+    0 26px 54px rgba(255, 107, 10, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.forge-v2-save:focus-visible,
+.forge-v2-button:focus-visible,
+.forge-v2-iconButton:focus-visible,
+.forge-v2-input:focus-visible,
+.forge-v2-titleInput:focus-visible,
+.forge-v2-recentCard:focus-visible {
+  outline: 2px solid rgba(var(--forge-orange), 0.96);
+  outline-offset: 3px;
+}
+
+.forge-v2-save:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.forge-v2-editor,
+.forge-v2-section,
+.forge-v2-detailList {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.forge-v2-sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+}
+
+.forge-v2-sectionTitle {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.forge-v2-sectionText {
+  margin: 0.24rem 0 0;
+  color: rgba(var(--forge-muted), 0.94);
+  font-size: 0.92rem;
+}
+
+.forge-v2-editorEmpty,
+.forge-v2-recentEmpty {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px dashed rgba(var(--forge-border), 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(var(--forge-muted), 0.92);
+}
+
+.forge-v2-exerciseCard,
+.forge-v2-detailExercise {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.95rem;
+  border-radius: 14px;
+}
+
+.forge-v2-exerciseHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.forge-v2-input {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0 12px;
+  border-radius: 12px;
+  font: inherit;
+}
+
+.forge-v2-setControls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.forge-v2-setBadge {
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  color: rgb(var(--forge-fg));
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(var(--forge-border), 0.08);
+  font-size: 0.83rem;
+  font-weight: 700;
+}
+
+.forge-v2-buttonRow,
+.forge-v2-panelActions,
+.forge-v2-panelMeta,
+.forge-v2-recentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.forge-v2-button,
+.forge-v2-iconButton {
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.forge-v2-button:hover,
+.forge-v2-iconButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--forge-orange), 0.32);
+}
+
+.forge-v2-iconButton {
+  min-width: 2.65rem;
+  min-height: 2.65rem;
+  padding: 0;
+}
+
+.forge-v2-recentGrid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: 1fr;
+}
+
+.forge-v2-recentCard {
+  width: 100%;
+  text-align: left;
+  padding: 14px;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.forge-v2-recentCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(var(--accentHot-rgb), 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.forge-v2-recentDate,
+.forge-v2-detailExerciseMeta {
+  color: rgba(var(--forge-muted), 0.88);
+  font-size: 0.84rem;
+}
+
+.forge-v2-recentTitle,
+.forge-v2-detailExerciseName {
+  margin: 0.36rem 0 0.55rem;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.forge-v2-dialogRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  align-items: end;
+}
+
+.forge-v2-overlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(3, 5, 8, 0.7);
+  backdrop-filter: blur(10px);
+  animation: forgeOverlayFade 220ms ease-out;
+}
+
+.forge-v2-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-height: min(82vh, 48rem);
+  border-radius: 1.55rem 1.55rem 0 0;
+  overflow: auto;
+  animation: forgeSheetSlideBottom 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forge-v2-panelInner {
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.forge-v2-panelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.forge-v2-panelTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.forgeShell .forgeHeader::after,
+.forgeShell .forgeTopBar::after {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(var(--forge-red), 0.6),
+    rgba(var(--forge-orange), 0.4),
+    transparent
+  );
+  opacity: 0.82;
+}
+
+@media (min-width: 640px) {
+  .forge-v2-page { padding-top: 1.1rem; }
+  .forge-v2-shell { width: min(1180px, calc(100vw - 2rem)); gap: 1.25rem; }
+  .forge-v2-hero { padding: 1.55rem; }
+  .forge-v2-recentGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .forge-v2-page { padding-bottom: 6rem; }
+  .forge-v2-shell { gap: 1.4rem; }
+  .forge-v2-recentGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .forge-v2-dialogRoot { justify-items: end; align-items: stretch; }
+  .forge-v2-panel {
+    width: min(36rem, 100vw);
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 1.75rem 0 0 1.75rem;
+    animation: forgePanelSlideRight 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .forge-v2-panelInner { padding: 1.2rem 1.15rem 1.35rem; }
+}
+
+.logv2-pageShell {
+  min-height: calc(100vh - 8rem);
+  padding: 1rem 0 5.5rem;
+  background:
+    radial-gradient(920px 520px at 50% -8%, rgba(255, 136, 88, 0.12), transparent 54%),
+    radial-gradient(1100px 700px at 50% 22%, rgba(255, 255, 255, 0.025), transparent 62%),
+    linear-gradient(180deg, #171921 0%, #0d1016 46%, #07090d 100%);
+  color: #f6f7fb;
+}
+
+.logv2-shell {
+  width: min(1160px, calc(100vw - 1.25rem));
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.logv2-header {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+.logv2-headingBlock {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.logv2-eyebrow {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 167, 120, 0.92);
+}
+
+.logv2-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 6vw, 3.8rem);
+  line-height: 0.94;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: #fbfcfe;
+  text-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.logv2-subtitle {
+  margin: 0;
+  max-width: 44rem;
+  color: rgba(230, 235, 245, 0.76);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.logv2-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.logv2-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(248, 250, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.logv2-heroCard,
+.logv2-sectionCard,
+.logv2-dialog {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 26%, rgba(255, 255, 255, 0.02) 100%),
+    rgba(28, 33, 44, 0.78);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.logv2-heroCard {
+  padding: 1.35rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.045) 16%, rgba(255, 255, 255, 0.012) 100%),
+    linear-gradient(135deg, rgba(255, 154, 102, 0.06) 0%, rgba(255, 113, 80, 0.02) 32%, rgba(31, 37, 50, 0) 58%),
+    rgba(35, 40, 52, 0.96);
+  box-shadow:
+    0 34px 96px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 14px 28px rgba(255, 124, 72, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.logv2-sectionCard {
+  margin-top: 0.65rem;
+  padding: 1.1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.045) 24%, rgba(255, 255, 255, 0.018) 100%),
+    rgba(25, 30, 41, 0.82);
+  box-shadow:
+    0 20px 58px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.logv2-sectionCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.1rem;
+  right: 1.1rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 196, 140, 0.34), transparent);
+  pointer-events: none;
+}
+
+.logv2-heroGlow {
+  position: absolute;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 999px;
+  filter: blur(46px);
+  pointer-events: none;
+}
+
+.logv2-heroGlow--orange {
+  top: -4.5rem;
+  left: -2.5rem;
+  background: rgba(255, 150, 92, 0.08);
+}
+
+.logv2-heroGlow--red {
+  top: -4rem;
+  right: -2.5rem;
+  background: rgba(255, 82, 126, 0.06);
+}
+
+.logv2-heroInner,
+.logv2-dialogInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.logv2-heroTop,
+.logv2-panelHeader,
+.logv2-sectionHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.logv2-metaBlock {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.logv2-metaLabel {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(235, 240, 248, 0.72);
+}
+
+.logv2-metaValue {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: rgba(248, 250, 254, 0.9);
+}
+
+.logv2-titleInput,
+.logv2-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7f9fc;
+  backdrop-filter: blur(8px);
+}
+
+.logv2-titleInput {
+  min-height: 3.5rem;
+  padding: 0.2rem 0.25rem;
+  border-radius: 18px;
+  font: inherit;
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.logv2-titleInput::placeholder,
+.logv2-input::placeholder {
+  color: rgba(226, 232, 241, 0.62);
+}
+
+.logv2-metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.logv2-metricCard,
+.logv2-exerciseCard,
+.logv2-recentCard,
+.logv2-detailCard,
+.logv2-emptyState {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03) 26%, rgba(255, 255, 255, 0.02) 100%),
+    rgba(20, 24, 33, 0.7);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.logv2-metricCard {
+  padding: 1rem 1.05rem;
+  border-color: rgba(255, 255, 255, 0.2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.025) 100%),
+    rgba(28, 33, 44, 0.78);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 10px 18px rgba(255, 255, 255, 0.03);
+}
+
+.logv2-metricLabel,
+.logv2-sectionSubtitle,
+.logv2-recentMeta,
+.logv2-detailMeta {
+  color: rgba(229, 235, 244, 0.78);
+}
+
+.logv2-metricLabel {
+  display: block;
+  margin-bottom: 0.22rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.logv2-metricValue {
+  font-size: 1.32rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.logv2-editor,
+.logv2-exerciseList,
+.logv2-detailList {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.logv2-sectionTitle {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 850;
+  color: #fafcff;
+  letter-spacing: -0.03em;
+}
+
+.logv2-sectionSubtitle {
+  margin: 0.22rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.logv2-emptyState {
+  padding: 1.05rem;
+}
+
+.logv2-emptyState p {
+  margin: 0;
+}
+
+.logv2-emptyState p + p {
+  margin-top: 0.35rem;
+}
+
+.logv2-exerciseCard,
+.logv2-detailCard {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.logv2-exerciseHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.logv2-input {
+  min-height: 3rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  font: inherit;
+}
+
+.logv2-setRow,
+.logv2-btnRow,
+.logv2-panelActions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.logv2-setRow {
+  justify-content: space-between;
+}
+
+.logv2-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(248, 250, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.logv2-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  min-height: 3rem;
+  padding: 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease, border-color 140ms ease, filter 140ms ease;
+}
+
+.logv2-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.logv2-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.logv2-btn:focus-visible,
+.logv2-titleInput:focus-visible,
+.logv2-input:focus-visible,
+.logv2-recentCard:focus-visible {
+  outline: 2px solid rgba(255, 168, 111, 0.95);
+  outline-offset: 3px;
+}
+
+.logv2-btn--primary {
+  min-height: 3.35rem;
+  padding: 0 1.2rem;
+  border-color: rgba(255, 205, 146, 0.52);
+  background: linear-gradient(135deg, #ffcb75 0%, #ff9456 58%, #ff7159 100%);
+  color: #190d08;
+  box-shadow:
+    0 20px 36px rgba(0, 0, 0, 0.25),
+    0 24px 52px rgba(255, 116, 58, 0.3),
+    0 0 34px rgba(255, 164, 98, 0.28);
+}
+
+.logv2-btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: saturate(1.04);
+  box-shadow:
+    0 24px 42px rgba(0, 0, 0, 0.28),
+    0 30px 62px rgba(255, 114, 56, 0.34),
+    0 0 38px rgba(255, 164, 98, 0.32);
+}
+
+.logv2-btn--secondary {
+  border-color: rgba(255, 196, 152, 0.16);
+  background: linear-gradient(135deg, rgba(255, 182, 132, 0.13) 0%, rgba(255, 139, 97, 0.08) 100%);
+  color: rgba(248, 250, 255, 0.96);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.16),
+    0 0 12px rgba(255, 148, 92, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.logv2-btn--secondary:hover:not(:disabled) {
+  border-color: rgba(255, 206, 166, 0.22);
+  background: linear-gradient(135deg, rgba(255, 188, 140, 0.17) 0%, rgba(255, 148, 104, 0.11) 100%);
+}
+
+.logv2-btn--tertiary {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(245, 248, 252, 0.92);
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+}
+
+.logv2-btn--tertiary:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.logv2-btn--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(245, 248, 252, 0.84);
+  backdrop-filter: blur(8px);
+}
+
+.logv2-iconBtn {
+  min-width: 3rem;
+  padding: 0;
+}
+
+.logv2-recentGrid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+}
+
+.logv2-recentCard {
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+}
+
+.logv2-recentCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 42px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(255, 165, 104, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.logv2-recentDate {
+  color: rgba(224, 230, 240, 0.62);
+  font-size: 0.84rem;
+}
+
+.logv2-recentTitle,
+.logv2-detailTitle,
+.logv2-panelTitle {
+  margin: 0.38rem 0 0.48rem;
+  color: #fbfcfe;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.logv2-panelTitle {
+  font-size: 1.6rem;
+}
+
+.logv2-dialogRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  align-items: end;
+}
+
+.logv2-overlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(5, 7, 11, 0.64);
+  backdrop-filter: blur(12px);
+}
+
+.logv2-dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-height: min(84vh, 48rem);
+  padding: 1.05rem;
+}
+
+.logv2-detailList {
+  max-height: min(50vh, 28rem);
+  overflow: auto;
+}
+
+@media (min-width: 640px) {
+  .logv2-shell {
+    width: min(1160px, calc(100vw - 2rem));
+  }
+
+  .logv2-heroCard,
+  .logv2-sectionCard,
+  .logv2-dialog {
+    padding: 1.35rem;
+  }
+
+  .logv2-recentGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .logv2-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .logv2-recentGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .logv2-dialogRoot {
+    justify-items: end;
+    align-items: stretch;
+  }
+
+  .logv2-dialog {
+    width: min(36rem, 100vw);
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 30px 0 0 30px;
+  }
+}

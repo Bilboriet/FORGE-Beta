@@ -61,7 +61,7 @@ export const BASE_EXERCISES: BaseExercise[] = [
 
   // LEGS - Quads
   { id: "squat", name: "Squat", muscleGroup: "quads", category: "legs" },
-  { id: "leg_press", name: "Leg Press", muscleGroup: "quads", category: "legs" },
+  { id: "sled_leg_press", name: "Sled Leg Press", muscleGroup: "quads", category: "legs" },
   { id: "hack_squat", name: "Hack Squat", muscleGroup: "quads", category: "legs" },
   { id: "lunge_split_squat", name: "Lunge / Split Squat", muscleGroup: "quads", category: "legs" },
   { id: "leg_extension", name: "Leg Extension", muscleGroup: "quads", category: "legs" },
@@ -82,11 +82,23 @@ export const BASE_EXERCISES: BaseExercise[] = [
   { id: "hip_abduction", name: "Hip Abduction", muscleGroup: "glutes", category: "legs" },
   { id: "cable_pull_through", name: "Cable Pull-through", muscleGroup: "glutes", category: "legs" },
 
+  // LEGS - Adductors
+  { id: "hip_adduction", name: "Hip Adduction", muscleGroup: "other", category: "legs" },
+
   // LEGS - Calves
   { id: "standing_calf_raise", name: "Standing Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "single_leg_standing_calf_raise", name: "Single Leg Standing Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "smith_machine_standing_calf_raise", name: "Smith Machine Standing Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "machine_standing_calf_raise", name: "Machine Standing Calf Raise", muscleGroup: "calves", category: "legs" },
   { id: "seated_calf_raise", name: "Seated Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "single_leg_seated_calf_raise", name: "Single Leg Seated Calf Raise", muscleGroup: "calves", category: "legs" },
   { id: "leg_press_calf_raise", name: "Leg Press Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "bent_knee_leg_press_calf_raise", name: "Bent Knee Leg Press Calf Raise", muscleGroup: "calves", category: "legs" },
+  { id: "donkey_calf_raise", name: "Donkey Calf Raise", muscleGroup: "calves", category: "legs" },
   { id: "tibialis_raise", name: "Tibialis Raise", muscleGroup: "calves", category: "legs" },
+  { id: "single_leg_tibialis_raise", name: "Single Leg Tibialis Raise", muscleGroup: "calves", category: "legs" },
+  { id: "seated_tibialis_raise", name: "Seated Tibialis Raise", muscleGroup: "calves", category: "legs" },
+  { id: "band_tibialis_dorsiflexion", name: "Band Tibialis Dorsiflexion", muscleGroup: "calves", category: "legs" },
 
   // CORE
   { id: "crunch", name: "Crunch", muscleGroup: "abs", category: "core" },

@@ -7,6 +7,8 @@ export type TabKey =
   | "logg"
   | "historikk"
   | "analyse"
+  | "kropp"
+  | "database"
   | "diett"
   | "innstillinger";
 
@@ -27,6 +29,8 @@ export function BottomNav({
     { key: "logg", label: tr("tab.log") },
     { key: "historikk", label: tr("tab.history") },
     { key: "analyse", label: tr("tab.analytics") },
+    { key: "kropp", label: "Body" },
+    { key: "database", label: "Database" },
     { key: "diett", label: tr("tab.diet") },
     { key: "innstillinger", label: tr("tab.settings") },
   ];

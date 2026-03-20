@@ -1,0 +1,772 @@
+.plasma-log-page {
+  min-height: calc(100vh - 8rem);
+  padding: 1rem 0 5.5rem;
+}
+
+.plasma-log-shell {
+  width: min(1160px, calc(100vw - 1.25rem));
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.plasma-log-header {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+.plasma-log-heading {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.plasma-log-kicker,
+.plasma-log-label {
+  margin: 0;
+  color: var(--plasma-log-text-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.plasma-log-title {
+  margin: 0;
+  color: var(--plasma-log-text-strong);
+  font-size: clamp(2.25rem, 6vw, 3.8rem);
+  line-height: 0.94;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.plasma-log-title--compact {
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  letter-spacing: -0.04em;
+}
+
+.plasma-log-subtitle,
+.plasma-section-text,
+.plasma-recent-meta,
+.plasma-detail-meta,
+.plasma-panel-meta {
+  margin: 0;
+  color: var(--plasma-log-text-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.plasma-log-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.plasma-log-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0 0.95rem;
+  border-radius: var(--plasma-log-radius-pill);
+  border: 1px solid var(--plasma-log-border-soft);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02) 100%),
+    color-mix(in oklch, var(--plasma-log-surface-row) 84%, transparent);
+  color: var(--plasma-log-text-base);
+  box-shadow: var(--plasma-log-shadow-card);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.plasma-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.35rem;
+  border-radius: var(--plasma-log-radius-hero);
+  border: 1px solid var(--plasma-log-border-strong);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.115) 0%, rgb(255 255 255 / 0.04) 11%, rgb(255 255 255 / 0.005) 100%),
+    color-mix(in oklch, var(--plasma-log-surface-hero) 96%, black 4%);
+  box-shadow: var(--plasma-log-shadow-hero);
+  backdrop-filter: blur(var(--plasma-log-blur-surface)) saturate(135%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-surface)) saturate(135%);
+}
+
+.plasma-hero > * {
+  position: relative;
+  z-index: 3;
+}
+
+.plasma-hero-inner {
+  position: relative;
+  border-radius: inherit;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.plasma-hero-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.plasma-meta-block {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.plasma-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.plasma-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 1;
+  background:
+    radial-gradient(
+      7.8rem 3rem at calc(100% - 4rem) 1.45rem,
+      rgb(4 6 10 / 0.34) 0%,
+      rgb(4 6 10 / 0.16) 34%,
+      transparent 60%
+    );
+  pointer-events: none;
+}
+
+.plasma-hero-corner {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.plasma-hero-corner::before {
+  content: "";
+  position: absolute;
+  top: 0.38rem;
+  right: 0.86rem;
+  width: 3.85rem;
+  height: 1.95rem;
+  border-top-right-radius: 1.35rem;
+  background:
+    radial-gradient(
+      2.3rem 1.05rem at 80% 44%,
+      color-mix(in oklch, var(--plasma-log-plasma-hot) 82%, white 6%) 0%,
+      var(--plasma-log-plasma-core) 20%,
+      color-mix(in oklch, var(--plasma-log-plasma-core) 42%, transparent) 36%,
+      transparent 58%
+    );
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.plasma-hero-corner::after {
+  content: "";
+  position: absolute;
+  top: 0.03rem;
+  right: 0.98rem;
+  width: 6.35rem;
+  height: 0.22rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklch, var(--plasma-log-plasma-seam) 52%, white 2%) 28%,
+      var(--plasma-log-plasma-seam) 60%,
+      color-mix(in oklch, var(--plasma-log-plasma-core) 34%, transparent) 88%,
+      transparent 100%
+    );
+  box-shadow:
+    0 0 6px color-mix(in oklch, var(--plasma-log-plasma-core) 22%, transparent),
+    0 0 1px color-mix(in oklch, var(--plasma-log-plasma-hot) 16%, transparent);
+  opacity: 0.98;
+  pointer-events: none;
+}
+
+.plasma-hero-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 3;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.046), rgb(255 255 255 / 0) 13%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.038) 0, rgb(255 255 255 / 0.015) 20px, rgb(255 255 255 / 0) 42px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.095),
+    inset 0 -1px 0 rgb(255 255 255 / 0.025);
+  pointer-events: none;
+}
+
+.plasma-hero-input {
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.2rem 0.25rem;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--plasma-log-text-strong);
+  font: inherit;
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  box-shadow: none;
+}
+
+.plasma-hero-input::placeholder {
+  color: rgba(226, 232, 241, 0.62);
+}
+
+.plasma-stat-card {
+  position: relative;
+  padding: 1rem 1.05rem;
+  border-radius: 20px;
+  border: 1px solid var(--plasma-log-border-soft);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01) 100%),
+    var(--plasma-log-surface-card);
+  box-shadow: var(--plasma-log-shadow-card);
+  backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+}
+
+.plasma-stat-label {
+  display: block;
+  margin-bottom: 0.22rem;
+  color: var(--plasma-log-text-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plasma-stat-value {
+  color: var(--plasma-log-text-strong);
+  font-size: 1.32rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.plasma-section-secondary {
+  position: relative;
+  margin-top: 0.7rem;
+  padding: 1.1rem;
+  border-radius: var(--plasma-log-radius-card);
+  border: 1px solid var(--plasma-log-border-base);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01)),
+    var(--plasma-log-surface-section);
+  box-shadow:
+    0 18px 40px rgb(0 0 0 / 0.3),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+}
+
+.plasma-section-secondary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.1rem;
+  right: 1.1rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.08), transparent);
+  pointer-events: none;
+}
+
+.plasma-section-secondary::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(var(--plasma-log-radius-card) - 1px);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.026), rgb(255 255 255 / 0) 16%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.045);
+  pointer-events: none;
+}
+
+.plasma-section-title {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 850;
+  color: var(--plasma-log-text-strong);
+  letter-spacing: -0.03em;
+}
+
+.plasma-start-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plasma-start-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.plasma-editor,
+.plasma-exercise-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.plasma-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.plasma-recent-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+}
+
+.plasma-exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.plasma-exercise-meta {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.plasma-set-row,
+.plasma-btn-row {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.plasma-set-row {
+  justify-content: space-between;
+}
+
+.plasma-set-list,
+.plasma-detail-set-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.plasma-set-grid {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.plasma-set-index,
+.plasma-row-meta,
+.plasma-empty-note,
+.plasma-detail-set {
+  color: var(--plasma-log-text-soft);
+  font-size: 0.9rem;
+}
+
+.plasma-detail-set {
+  display: block;
+}
+
+.plasma-recent-card {
+  position: relative;
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  border-radius: 20px;
+  border: 1px solid var(--plasma-log-border-soft);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01) 100%),
+    var(--plasma-log-surface-card);
+  box-shadow: var(--plasma-log-shadow-card);
+  backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.plasma-recent-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--plasma-log-border-base);
+  box-shadow:
+    0 16px 32px rgb(0 0 0 / 0.28),
+    0 1px 0 rgb(255 255 255 / 0.05) inset;
+}
+
+.plasma-recent-date {
+  color: var(--plasma-log-text-faint);
+  font-size: 0.84rem;
+}
+
+.plasma-recent-title,
+.plasma-detail-title,
+.plasma-panel-title {
+  margin: 0.38rem 0 0.48rem;
+  color: var(--plasma-log-text-strong);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.plasma-panel-title {
+  font-size: 1.6rem;
+}
+
+.plasma-input-row {
+  position: relative;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 0.09);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.02), rgb(255 255 255 / 0.005)),
+    var(--plasma-log-surface-row);
+  box-shadow: 0 10px 22px rgb(0 0 0 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+}
+
+.plasma-input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--plasma-log-radius-control);
+  border: 1px solid var(--plasma-log-border-base);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0.008)),
+    var(--plasma-log-surface-row);
+  color: var(--plasma-log-text-strong);
+  font: inherit;
+  box-shadow: var(--plasma-log-shadow-control);
+  backdrop-filter: blur(var(--plasma-log-blur-control));
+}
+
+.plasma-input::placeholder {
+  color: var(--plasma-log-text-faint);
+}
+
+.plasma-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0 0.8rem;
+  border-radius: var(--plasma-log-radius-pill);
+  background: rgb(255 255 255 / 0.04);
+  color: var(--plasma-log-text-base);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.plasma-btn-primary,
+.plasma-btn-secondary,
+.plasma-btn-tertiary,
+.plasma-btn-ghost {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border-radius: var(--plasma-log-radius-control);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background 140ms ease, filter 140ms ease;
+}
+
+.plasma-btn-primary:hover:not(:disabled),
+.plasma-btn-secondary:hover:not(:disabled),
+.plasma-btn-tertiary:hover:not(:disabled),
+.plasma-btn-ghost:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.plasma-btn-primary:disabled,
+.plasma-btn-secondary:disabled,
+.plasma-btn-tertiary:disabled,
+.plasma-btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.plasma-btn-primary {
+  min-height: 3.35rem;
+  padding: 0 1.2rem;
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid color-mix(in oklch, var(--plasma-log-plasma-core) 38%, white 8%);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--plasma-log-plasma-hot) 28%, white 4%) 0%,
+      color-mix(in oklch, var(--plasma-log-plasma-core) 88%, black 8%) 100%
+    );
+  color: color-mix(in oklch, white 92%, var(--plasma-log-plasma-core) 8%);
+  box-shadow: var(--plasma-log-shadow-button);
+}
+
+.plasma-btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0) 40%),
+    linear-gradient(135deg, transparent 0%, rgb(255 255 255 / 0.06) 100%);
+  opacity: 0.8;
+}
+
+.plasma-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: saturate(1.02) brightness(1.02);
+}
+
+.plasma-btn-secondary {
+  border-radius: 18px;
+  border: 1px solid color-mix(in oklch, var(--plasma-log-plasma-core) 24%, white 5%);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.01)),
+    color-mix(in oklch, var(--plasma-log-surface-card) 88%, var(--plasma-log-plasma-core) 12%);
+  color: var(--plasma-log-text-strong);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 0.14), inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+.plasma-btn-secondary:hover:not(:disabled) {
+  border-color: color-mix(in oklch, var(--plasma-log-plasma-core) 30%, white 7%);
+}
+
+.plasma-btn-tertiary {
+  border-radius: 18px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.022), rgb(255 255 255 / 0.008)),
+    var(--plasma-log-surface-row);
+  color: var(--plasma-log-text-base);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.045);
+}
+
+.plasma-btn-tertiary:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 0.14);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.028), rgb(255 255 255 / 0.01)),
+    var(--plasma-log-surface-row);
+}
+
+.plasma-btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--plasma-log-text-soft);
+}
+
+.plasma-btn-ghost:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.plasma-btn-icon {
+  min-width: 3rem;
+  padding: 0;
+}
+
+.plasma-dialog-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  align-items: end;
+}
+
+.plasma-overlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(4, 6, 10, 0.66);
+  backdrop-filter: blur(10px);
+}
+
+.plasma-detail-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-height: min(84vh, 48rem);
+  padding: 1.05rem;
+  border-radius: 30px 30px 0 0;
+  border: 1px solid var(--plasma-log-border-base);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01)),
+    var(--plasma-log-surface-section);
+  box-shadow:
+    0 22px 52px rgb(0 0 0 / 0.34),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+}
+
+.plasma-detail-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.15rem;
+  right: 1.15rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.08), transparent);
+  pointer-events: none;
+}
+
+.plasma-panel-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.plasma-panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.plasma-detail-list {
+  display: grid;
+  gap: 0.9rem;
+  max-height: min(50vh, 28rem);
+  overflow: auto;
+}
+
+.plasma-panel-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.plasma-detail-item {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid var(--plasma-log-border-soft);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.01) 100%),
+    var(--plasma-log-surface-card);
+  box-shadow: var(--plasma-log-shadow-card);
+  backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--plasma-log-blur-card)) saturate(125%);
+}
+
+.plasma-focusable:focus-visible,
+.plasma-btn-primary:focus-visible,
+.plasma-btn-secondary:focus-visible,
+.plasma-btn-tertiary:focus-visible,
+.plasma-btn-ghost:focus-visible,
+.plasma-input:focus-visible,
+.plasma-recent-card:focus-visible {
+  outline: 2px solid var(--plasma-log-focus);
+  outline-offset: 3px;
+}
+
+@media (min-width: 640px) {
+  .plasma-log-shell {
+    width: min(1160px, calc(100vw - 2rem));
+  }
+
+  .plasma-recent-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plasma-detail-panel {
+    padding: 1.35rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .plasma-set-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .plasma-hero::before {
+    background:
+      radial-gradient(
+        6.8rem 2.5rem at calc(100% - 3.95rem) 1.35rem,
+        rgb(4 6 10 / 0.32) 0%,
+        rgb(4 6 10 / 0.13) 30%,
+        transparent 54%
+      );
+  }
+
+  .plasma-hero-corner::before {
+    width: 3.35rem;
+    height: 1.7rem;
+    opacity: 0.78;
+    background:
+      radial-gradient(
+        1.95rem 0.92rem at 80% 44%,
+        color-mix(in oklch, var(--plasma-log-plasma-hot) 78%, white 4%) 0%,
+        var(--plasma-log-plasma-core) 18%,
+        color-mix(in oklch, var(--plasma-log-plasma-core) 34%, transparent) 32%,
+        transparent 52%
+      );
+  }
+
+  .plasma-hero-corner::after {
+    width: 6rem;
+    height: 0.2rem;
+    opacity: 0.97;
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in oklch, var(--plasma-log-plasma-seam) 56%, white 2%) 28%,
+        var(--plasma-log-plasma-seam) 60%,
+        color-mix(in oklch, var(--plasma-log-plasma-core) 28%, transparent) 86%,
+        transparent 100%
+      );
+  }
+
+  .plasma-hero-inner::before {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0) 13%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.04) 0, rgb(255 255 255 / 0.015) 18px, rgb(255 255 255 / 0) 38px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .plasma-log-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .plasma-recent-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .plasma-dialog-root {
+    justify-items: end;
+    align-items: stretch;
+  }
+
+  .plasma-detail-panel {
+    width: min(36rem, 100vw);
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 30px 0 0 30px;
+  }
+}

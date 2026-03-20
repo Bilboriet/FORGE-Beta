@@ -4,6 +4,20 @@
 
 export type ID = string;
 
+export type UserBodyMetricsV2 = {
+  bodyweightKg: number | null;
+  heightCm: number | null;
+  updatedAt: string;
+  source: "manual";
+};
+
+export type SessionBodyMetricsSnapshotV2 = {
+  bodyweightKg: number | null;
+  heightCm: number | null;
+  capturedAt: string;
+  source: "profile_snapshot" | "manual_override" | "unknown";
+};
+
 // -------------------------
 // Sets (one logged set)
 // -------------------------
@@ -64,6 +78,7 @@ export type WorkoutSession = {
   date: string;         // "YYYY-MM-DD"
   title?: string;       // e.g. "Push", "Legs"
   note?: string;
+  bodyMetricsSnapshot?: SessionBodyMetricsSnapshotV2;
 
   exercises: ExerciseBlock[];
 };

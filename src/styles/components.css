@@ -550,12 +550,21 @@ button {
 
 .forge-introPanel {
   width: min(100%, 560px);
+  max-height: min(86vh, 860px);
+  display: flex;
+  flex-direction: column;
   border-radius: 18px;
   border: 1px solid var(--strokeSubtle);
   background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 16%, rgba(0,0,0,0) 48%),
     linear-gradient(to bottom, var(--surfaceTop), var(--surfaceBot));
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.6);
   padding: 16px;
+}
+
+.forge-introContent {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .forge-introTitle {
@@ -571,10 +580,15 @@ button {
   line-height: 1.5;
 }
 
+.forge-introText p {
+  margin: 0 0 12px;
+}
+
 .forge-introActions {
   display: flex;
   justify-content: flex-end;
   margin-top: 14px;
+  flex-shrink: 0;
 }
 
 .forgeMain {

@@ -1,4 +1,12 @@
+@import "./styles/forge-tokens.css";
+@import "./styles/plasma-log-theme.css";
+@import "./styles/plasma-log-components.css";
 @import "./styles/tokens.css";
 @import "./styles/theme.css";
 @import "./styles/base.css";
 @import "./styles/components.css";
+@import "./styles/body-v2.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

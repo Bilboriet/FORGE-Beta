@@ -4,7 +4,7 @@ import { useForgeSettings } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
 import { LS_KEYS } from "../constants";
 import type { ExerciseRef, WorkoutSession } from "../types";
-import { EXERCISE_LIBRARY } from "../exerciseLibrary";
+import { exerciseDatabaseRefs } from "../data/exerciseDatabase";
 import { sortByDateDesc } from "../utils";
 import { buildHeatmapDays, computeCurrentStreak } from "../utils/consistency";
 import {
@@ -220,11 +220,33 @@ export default function AnalyticsPage() {
 
   const sessionsDesc = useMemo(() => sortByDateDesc(sessions), [sessions]);
   const sessionsAsc = useMemo(() => [...sessionsDesc].reverse(), [sessionsDesc]);
+  const v2ExerciseLibrary = useMemo<ExerciseRef[]>(() => {
+    const seen = new Set<string>();
+    const out: ExerciseRef[] = [];
+    for (const session of sessionsAsc) {
+      for (const block of session.exercises ?? []) {
+        const id = String(block.exercise?.id ?? "").trim();
+        if (!id || seen.has(id)) continue;
+        seen.add(id);
+        out.push({
+          id,
+          name: String(block.exercise?.name ?? id),
+          muscleGroup: (block.exercise?.muscleGroup ?? "other") as ExerciseRef["muscleGroup"],
+        });
+      }
+    }
+    for (const ex of exerciseDatabaseRefs) {
+      if (seen.has(ex.id)) continue;
+      seen.add(ex.id);
+      out.push(ex);
+    }
+    return out;
+  }, [sessionsAsc]);
 
   const selectedExercise = useMemo<ExerciseRef | null>(() => {
     if (!selectedExerciseId) return null;
-    return EXERCISE_LIBRARY.find((x) => x.id === selectedExerciseId) ?? null;
-  }, [selectedExerciseId]);
+    return v2ExerciseLibrary.find((x) => x.id === selectedExerciseId) ?? null;
+  }, [selectedExerciseId, v2ExerciseLibrary]);
 
   useEffect(() => {
     if (selectedExerciseId && !selectedExercise) setSelectedExerciseId(null);
@@ -237,9 +259,9 @@ export default function AnalyticsPage() {
 
   const filteredExercises = useMemo(() => {
     const q = exerciseQuery.trim();
-    if (!q) return EXERCISE_LIBRARY;
-    return searchExercises(EXERCISE_LIBRARY, q).map((hit) => hit.ex);
-  }, [exerciseQuery]);
+    if (!q) return v2ExerciseLibrary;
+    return searchExercises(v2ExerciseLibrary, q).map((hit) => hit.ex);
+  }, [exerciseQuery, v2ExerciseLibrary]);
   const exerciseOptions = useMemo(() => {
     const seen = new Set<string>();
     const out: ExerciseRef[] = [];
@@ -372,8 +394,8 @@ export default function AnalyticsPage() {
   }, [exerciseRows, selectedExerciseId, selectedExerciseName]);
 
   const muscleVolume = useMemo(
-    () => computeMuscleVolume(sessionsAsc, EXERCISE_LIBRARY).filter((x) => x.totalVolume > 0),
-    [sessionsAsc]
+    () => computeMuscleVolume(sessionsAsc, v2ExerciseLibrary).filter((x) => x.totalVolume > 0),
+    [sessionsAsc, v2ExerciseLibrary]
   );
   const muscleTotal = useMemo(
     () => muscleVolume.reduce((sum, x) => sum + x.totalVolume, 0),

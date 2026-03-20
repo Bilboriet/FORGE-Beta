@@ -1,0 +1,813 @@
+.bodyV2Page {
+  --bg-deep: #05060a;
+  --bg-core: #080b12;
+  --bg-surface: #0e121b;
+  --plasma-core: #ff1f3d;
+  --plasma-neon: #ff0033;
+  --plasma-magenta: #ff2a7a;
+  --plasma-hot: #ff1744;
+  --text-strong: rgba(255, 255, 255, 0.92);
+  --text: rgba(255, 255, 255, 0.72);
+  --muted: rgba(255, 255, 255, 0.38);
+  position: relative;
+  color: var(--text);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.bodyV2Page,
+.bodyV2Page * {
+  box-sizing: border-box;
+}
+
+.bodyV2Workspace {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: calc(100dvh - var(--forge-header-total-h, 72px) - var(--nav-h, var(--bottom-nav-h, 84px)));
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px;
+  padding: 8px 10px 8px;
+  overflow-y: hidden;
+  overflow-x: clip;
+  background: #060608;
+}
+
+.bodyV2TopRow {
+  padding: 6px 10px 4px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-start;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  z-index: 6;
+}
+
+.bodyV2TopRow::before {
+  content: none;
+}
+
+.bodyV2TopRow > * {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+}
+
+.bodyV2SelectedMuscle {
+  margin-left: 4px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+}
+
+.bodyV2MuscleDebug {
+  margin: 0 14px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bodyV2ToggleGroup {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.bodyV2Pill {
+  appearance: none;
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(16, 18, 24, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(8px) saturate(115%);
+  backdrop-filter: blur(8px) saturate(115%);
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+.bodyV2Pill::before {
+  content: none;
+}
+
+.bodyV2Pill::after {
+  content: none;
+}
+
+.bodyV2Pill:hover {
+  transform: translateY(-0.5px);
+}
+
+.bodyV2Pill[data-active="true"] {
+  border-color: rgba(255, 0, 51, 0.6);
+  color: #ff4060;
+  box-shadow:
+    0 0 0 1px rgba(255, 0, 51, 0.12),
+    0 0 10px rgba(255, 0, 51, 0.18);
+  background: rgba(22, 17, 22, 0.58);
+}
+
+.bodyV2Pill:not([data-active="true"]) {
+  box-shadow: none;
+}
+
+.bodyV2TopRow .bodyV2Pill {
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+.bodyV2Chip {
+  appearance: none;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 11, 18, 0.42);
+  color: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+}
+
+.bodyV2Chip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.6;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.06) 35%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 75%
+  );
+}
+
+.bodyV2Chip:hover {
+  transform: translateY(-1px);
+}
+
+.bodyV2Chip.is-active {
+  background: rgba(255, 0, 51, 0.05);
+  border: 1px solid rgba(255, 0, 51, 0.95);
+  color: #ff0033;
+  box-shadow:
+    0 0 3px rgba(var(--accentHot-rgb, 255, 42, 42), 0.7),
+    0 0 8px rgba(var(--accentHot-rgb, 255, 42, 42), 0.28);
+}
+
+.bodyV2Chip--ghost {
+  padding: 6px 10px;
+}
+
+.bodyV2Stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 18px;
+  padding-bottom: 6px;
+  padding-left: 110px;
+  overflow-x: clip;
+}
+
+.bodyV2StageInner {
+  padding-top: 28px;
+}
+
+.bodyV2ViewToggle {
+  position: absolute;
+  top: 6px;
+  right: calc(clamp(36px, 9vw, 60px) + 4vw);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.55),
+    0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.bodyV2ViewToggleBtn {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  height: 24px;
+  min-width: 44px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.bodyV2ViewToggleBtn:hover {
+  transform: translateY(-1px);
+}
+
+.bodyV2ViewToggleBtn[data-active="true"] {
+  border-color: rgba(255, 0, 51, 0.9);
+  color: #ff0033;
+  box-shadow:
+    0 0 3px rgba(var(--accentHot-rgb, 255, 42, 42), 0.75),
+    0 0 8px rgba(var(--accentHot-rgb, 255, 42, 42), 0.30),
+    0 0 14px rgba(var(--accentHot-rgb, 255, 42, 42), 0.14);
+}
+
+.bodyV2Aura {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: none;
+}
+
+.bodyV2Canvas {
+  position: relative;
+  width: min(440px, 86vw);
+  max-width: 100%;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  transform: translateX(clamp(-24px, -3vw, -12px));
+}
+
+.bodyV2CanvasFallback {
+  width: 100%;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(14, 18, 27, 0.35);
+}
+
+.bodyV2BodyImg {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 62vh;
+  object-fit: contain;
+  object-position: center top;
+  display: block;
+  position: relative;
+  z-index: 1;
+  filter: grayscale(1) saturate(0) brightness(1.02) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35));
+}
+
+.bodyV2BodyContainer[data-view="front"] .bodyV2BodyImg {
+  filter: grayscale(1) saturate(0) brightness(1.06) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35));
+  transform: scale(1.015);
+  transform-origin: top center;
+}
+
+.bodyV2BodyImage {
+  max-height: 71vh;
+  width: auto;
+  object-fit: contain;
+  object-position: center top;
+}
+
+.bodyV2BodyContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  isolation: isolate;
+  transform: translateX(-20%);
+}
+
+.bodyV2BodyContainer::before {
+  content: none;
+}
+
+.bodyV2ZonesOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.bodyV2ZonesOverlay svg {
+  width: auto;
+  height: 100%;
+  display: block;
+  transform-origin: top center;
+  transform: translateY(19.00%) scale(0.62524) scaleX(1.01);
+}
+
+.bodyV2ZonesOverlay[data-view="back"] svg {
+  width: 100%;
+  height: 100%;
+  transform: translateY(11.4%) scale(0.715);
+}
+
+.bodyV2ZonesOverlay path {
+  fill: rgba(255, 0, 0, 0);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.bodyV2ZonesOverlay path:hover {
+  fill: rgba(255, 44, 44, 0.16);
+}
+
+.bodyV2ZonesOverlay path:active {
+  fill: rgba(255, 44, 44, 0.28);
+}
+
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="upper_chest"] #upper_chest_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="upper_chest"] #upper_chest_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="mid_lower_chest"] #mid_lower_chest_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="mid_lower_chest"] #mid_lower_chest_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="deltoid_anterior"] #deltoid_anterior_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="deltoid_anterior"] #deltoid_anterior_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="deltoid_lateral"] #deltoid_lateral_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="deltoid_lateral"] #deltoid_lateral_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="biceps"] #biceps_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="biceps"] #biceps_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="forearm_flexors"] #forearm_flexors_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="forearm_flexors"] #forearm_flexors_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="rectus_abdominis"] #rectus_abdominis,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="obliques"] #obliques_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="obliques"] #obliques_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="serratus_anterior"] #serratus_anterior_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="serratus_anterior"] #serratus_anterior_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="hip_flexors"] #hip_flexors_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="hip_flexors"] #hip_flexors_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="adductors"] #adductors_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="adductors"] #adductors_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="vastus_lateralis"] #vastus_lateralis_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="vastus_lateralis"] #vastus_lateralis_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="rectus_femoris"] #rectus_femoris_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="rectus_femoris"] #rectus_femoris_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="vastus_medialis"] #vastus_medialis_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="vastus_medialis"] #vastus_medialis_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="tibialis_anterior"] #tibialis_anterior_L,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="tibialis_anterior"] #tibialis_anterior_R,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="tibialis_anterior"] #tibialis_anterior_L path,
+.bodyV2ZonesOverlay[data-view="front"][data-selected-zone-pair="tibialis_anterior"] #tibialis_anterior_R path,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="upper_traps"] #upper_traps,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="mid_lower_traps"] #mid_lower_traps,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="posterior_deltoid"] #posterior_deltoid_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="posterior_deltoid"] #posterior_deltoid_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="infraspinatus_teresminor"] #infraspinatus_teresminor_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="infraspinatus_teresminor"] #infraspinatus_teresminor_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="teres_major"] #teres_major_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="teres_major"] #teres_major_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="upper_lats"] #upper_lats_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="upper_lats"] #upper_lats_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="lower_lats"] #lower_lats_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="lower_lats"] #lower_lats_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="erector_spinae"] #erector_spinae,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="triceps_long_head"] #triceps_long_head_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="triceps_long_head"] #triceps_long_head_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="triceps_lateral_medial"] #triceps_lateral_medial_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="triceps_lateral_medial"] #triceps_lateral_medial_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="forearm_extensors"] #forearm_extensors_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="forearm_extensors"] #forearm_extensors_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gluteus_medius"] #gluteus_medius_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gluteus_medius"] #gluteus_medius_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gluteus_maximus"] #gluteus_maximus_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gluteus_maximus"] #gluteus_maximus_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="lateral_hamstring"] #lateral_hamstring_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="lateral_hamstring"] #lateral_hamstring_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="medial_hamstring"] #medial_hamstring_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="medial_hamstring"] #medial_hamstring_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gastrocnemius"] #gastrocnemius_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="gastrocnemius"] #gastrocnemius_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="soleus"] #soleus_L,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="soleus"] #soleus_R,
+.bodyV2ZonesOverlay[data-view="back"][data-selected-zone-pair="mid_back"] #mid_back {
+  stroke: transparent;
+}
+
+.bodyV2RightRail {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: grid;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.bodyV2StatsRail {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 99px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.statRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  opacity: 0.5;
+  color: var(--muted);
+}
+
+.statTrack {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.statFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--accentHot-rgb, 255, 42, 42), 0.9),
+    rgba(var(--accentHot-rgb, 255, 42, 42), 0.4)
+  );
+  box-shadow: 0 0 6px rgba(var(--accentHot-rgb, 255, 42, 42), 0.45);
+}
+
+.bodyV2RailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bodyV2RailTrack {
+  width: 3px;
+  height: 74px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.bodyV2RailFill {
+  width: 100%;
+  background: linear-gradient(to top, #ff0033, #ff2a7a);
+  box-shadow: 0 0 12px rgba(255, 0, 51, 0.7), 0 0 25px rgba(255, 42, 122, 0.5);
+}
+
+.bodyV2RailLabel {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+}
+
+.bodyV2InspectorPanel {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 0, 51, 0.35);
+  background: rgba(14, 18, 27, 0.45);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 0 20px rgba(255, 0, 51, 0.5), 0 0 50px rgba(255, 42, 122, 0.25);
+  color: var(--text);
+  padding: 14px;
+  display: grid;
+  gap: 11px;
+}
+
+.bodyV2BottomHUD {
+  z-index: 7;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 6px calc(2px + env(safe-area-inset-bottom, 0px));
+  pointer-events: auto;
+  overflow-x: clip;
+}
+
+.bodyV2RegionHUDRail {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  background: rgba(8, 11, 18, 0.35);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 0, 51, 0.12);
+  border-radius: 999px;
+  padding: 8px;
+}
+
+.bodyV2RegionStripWrap {
+  padding: 8px 10px 6px;
+  margin-bottom: 0;
+}
+
+.bodyV2RegionChip {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.bodyV2InspectorPanel--overlay {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: min(380px, calc(100vw - 28px));
+  z-index: 8;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 240ms ease-out, transform 240ms ease-out;
+}
+
+.bodyV2InspectorPanel--overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.bodyV2InspectorPanel--contextual {
+  position: absolute;
+  z-index: 8;
+  width: max-content;
+  max-width: min(340px, calc(100% - 24px));
+  max-height: 48vh;
+  overflow: auto;
+  padding: 14px 14px 12px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
+}
+
+.bodyV2InspectorPanel--contextual[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.bodyV2InspectorPanel--dock {
+  position: relative;
+}
+
+.bodyV2MuscleModule {
+  position: absolute;
+  z-index: 8;
+  min-width: 84px;
+  max-width: 148px;
+  padding: 5px 7px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(8, 10, 14, 0.64);
+  -webkit-backdrop-filter: blur(7px) saturate(106%);
+  backdrop-filter: blur(7px) saturate(106%);
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.bodyV2ModuleConnector {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.bodyV2ModuleConnectorLine {
+  stroke: rgba(255, 78, 104, 0.26);
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px rgba(255, 60, 88, 0.16));
+}
+
+.bodyV2ModuleConnectorDot {
+  fill: rgba(255, 94, 116, 0.6);
+  filter: drop-shadow(0 0 2px rgba(255, 74, 102, 0.22));
+}
+
+.bodyV2MuscleModuleTitle {
+  font-size: 11px;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.92);
+  word-break: break-word;
+  margin-bottom: 3px;
+}
+
+.bodyV2MuscleModuleStats {
+  margin-top: 2px;
+  display: grid;
+  gap: 2px;
+}
+
+.bodyV2MuscleModuleStatRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.bodyV2MuscleModuleStatRow--primary .bodyV2MuscleModuleKey {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.bodyV2MuscleModuleStatRow--primary .bodyV2MuscleModuleVal {
+  font-size: 10px;
+}
+
+.bodyV2MuscleModuleKey {
+  font-size: 8.5px;
+  color: rgba(255, 255, 255, 0.52);
+  letter-spacing: 0.2px;
+}
+
+.bodyV2MuscleModuleVal {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+}
+
+.bodyV2MuscleModuleVal--subtle {
+  font-size: 8.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.bodyV2MuscleModuleList {
+  margin-top: 2px;
+  display: grid;
+  gap: 1px;
+}
+
+.bodyV2MuscleModuleListLabel {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.48);
+  letter-spacing: 0.18px;
+  margin-top: 1px;
+}
+
+.bodyV2MuscleModuleListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 12px;
+  gap: 8px;
+}
+
+.bodyV2MuscleModuleListName {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.74);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bodyV2MuscleModuleListValue {
+  flex: 0 0 auto;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.bodyV2InspectorKicker {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+.bodyV2InspectorTitle {
+  color: var(--text-strong);
+  font-weight: 600;
+  font-size: 19px;
+}
+
+.bodyV2InspectorRow {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  opacity: 0.55;
+}
+
+.bodyV2InspectorMode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bodyV2Pill--mini {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+.bodyV2InspectorLine {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  opacity: 0.55;
+}
+
+@media (max-width: 900px) {
+  .bodyV2TopRow {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .bodyV2Stage {
+    padding-left: 94px;
+  }
+
+  .bodyV2StatsRail {
+    left: 8px;
+    width: 77px;
+    gap: 10px;
+    opacity: 0.9;
+  }
+
+  .statLabel {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+
+  .statTrack {
+    height: 10px;
+  }
+
+  .bodyV2InspectorPanel--overlay {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    bottom: calc(var(--nav-h, var(--bottom-nav-h, 84px)) + env(safe-area-inset-bottom, 0px) + 8px);
+  }
+
+  .bodyV2BottomHUD {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 6px 2px;
+  }
+
+  .bodyV2RegionHUDRail {
+    justify-content: flex-start;
+    width: max-content;
+  }
+}
+

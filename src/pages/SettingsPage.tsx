@@ -1,6 +1,7 @@
 // src/pages/SettingsPage.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useBodyMetricsV2 } from "../hooks/useBodyMetricsV2";
 import { useForgeSettings, LS_SETTINGS } from "../hooks/useForgeSettings";
 import { useT } from "../hooks/useT";
 import { LS_KEYS } from "../constants";
@@ -12,7 +13,6 @@ import { getTheme, setTheme, type ThemeName } from "../theme/v2";
 
 const LS_ANALYTICS_EX = "forge:analytics_exercise_v1";
 const LS_ANALYTICS_FATIGUE_SCOPE = "forge:analytics_fatigue_scope_v1";
-const LS_FILTER_PRESETS = "exercise_filter_presets_v1";
 
 type ForgeBackupV1 = {
   schema: "forge_backup_v1";
@@ -111,6 +111,7 @@ function SelectRow({
 export function SettingsPage() {
   const t = useT();
   const [settings, setSettings] = useForgeSettings();
+  const [bodyMetrics, setBodyMetrics] = useBodyMetricsV2();
   const [themeName, setThemeName] = useState<ThemeName>(() => getTheme());
   const appVersion = (import.meta.env.VITE_APP_VERSION as string | undefined)?.trim() || "beta";
 
@@ -132,6 +133,17 @@ export function SettingsPage() {
     const sl = Array.isArray(sleep) ? sleep.length : 0;
     return { sessions: s, meals: m, sleep: sl };
   }, [sessions, meals, sleep]);
+
+  function updateBodyMetricsField(field: "bodyweightKg" | "heightCm", raw: string) {
+    const trimmed = raw.trim().replace(",", ".");
+    const parsed = trimmed === "" ? null : Number(trimmed);
+    setBodyMetrics((prev) => ({
+      ...prev,
+      [field]: Number.isFinite(parsed as number) && (parsed as number) >= 0 ? (parsed as number) : null,
+      updatedAt: new Date().toISOString(),
+      source: "manual",
+    }));
+  }
 
   function setUnits(units: "kg" | "lb") {
     setSettings((prev) => ({ ...prev, units, updatedAt: new Date().toISOString() }));
@@ -212,7 +224,7 @@ export function SettingsPage() {
 
   function getAllForgeKeys(): string[] {
     const base = Object.values(LS_KEYS) as string[];
-    const extras = [LS_SETTINGS, LS_ANALYTICS_EX, LS_ANALYTICS_FATIGUE_SCOPE, LS_FILTER_PRESETS];
+    const extras = [LS_SETTINGS, LS_ANALYTICS_EX, LS_ANALYTICS_FATIGUE_SCOPE];
     const seen = new Set<string>();
     const out: string[] = [];
     for (const k of [...base, ...extras]) {
@@ -405,6 +417,52 @@ export function SettingsPage() {
         </div>
       </Card>
 
+      <Card
+        title="Body Metrics (V2)"
+        subtitle="Used to lock bodyweight and height into newly saved workout sessions."
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "grid", gap: 6 }}>
+            <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>
+              BODYWEIGHT KG
+            </div>
+            <input
+              type="number"
+              min={0}
+              step={0.1}
+              value={bodyMetrics.bodyweightKg ?? ""}
+              onChange={(e) => updateBodyMetricsField("bodyweightKg", e.target.value)}
+              className="forge-input"
+            />
+          </div>
+
+          <div style={{ display: "grid", gap: 6 }}>
+            <div style={{ color: "var(--muted)", fontSize: 12, letterSpacing: 0.6 }}>
+              HEIGHT CM
+            </div>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={bodyMetrics.heightCm ?? ""}
+              onChange={(e) => updateBodyMetricsField("heightCm", e.target.value)}
+              className="forge-input"
+            />
+          </div>
+        </div>
+
+        <div style={{ color: "var(--muted)", fontSize: 12, lineHeight: 1.35 }}>
+          Stored in <span style={{ color: "var(--text)", fontWeight: 900 }}>{LS_KEYS.body_metrics_v2}</span>.
+          New workout sessions will capture a locked snapshot of these values when saved. Older sessions are left unchanged.
+        </div>
+      </Card>
+
       {import.meta.env.DEV ? (
         <Card title="ThemeLab (DEV)" subtitle="V2 palette switcher for design testing only">
           <SelectRow
@@ -530,7 +588,6 @@ export function SettingsPage() {
     </CollapsibleSection>
   );
 
-  
 return (
     <div className="forgePage">
       {appPrefs}

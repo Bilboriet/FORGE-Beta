@@ -1,6 +1,7 @@
 // src/constants.ts
 export const LS_KEYS = {
   sessions: "forge_sessions_v1",
+  body_metrics_v2: "forge:body_metrics_v2",
   exercisePrefs: "forge:exercisePrefs",
   nutrition_v1: "forge:nutrition_v1",
   diet_targets_v1: "forge:diet_targets_v1",
