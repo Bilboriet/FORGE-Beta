@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { ActiveSessionCard } from "../ui/ActiveSessionCard";
 import { ExerciseListEditor } from "../ui/ExerciseListEditor";
 import { RecentSessionsSection } from "../ui/RecentSessionsSection";
@@ -10,7 +11,7 @@ import { useForgeSettings } from "../hooks/useForgeSettings";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { formatSessionDateV2 } from "../lib/workoutUtils";
 import type { ExerciseBlock, ExerciseRef, SetLog, WorkoutSession } from "../types";
-import { sortByDateDesc } from "../utils";
+import { estimateExerciseFromHistory, sortByDateDesc, type ExerciseEstimateHint } from "../utils";
 
 function createId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -42,6 +43,7 @@ function createRepeatWorkout(session: WorkoutSession): WorkoutSession {
       id: createId(),
       order: index,
       exercise: exercise.exercise,
+      targetReps: exercise.targetReps ?? 12,
       sets: [],
     })),
   };
@@ -60,10 +62,23 @@ export function LogPageV2() {
   const [draft, setDraft] = useLocalStorage<WorkoutSession | null>(LS_KEYS.log_draft_v1, null);
   const [selectedSession, setSelectedSession] = useState<WorkoutSession | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [pendingScrollExerciseId, setPendingScrollExerciseId] = useState<string | null>(null);
+  const [discardConfirmOpen, setDiscardConfirmOpen] = useState(false);
 
   useEffect(() => {
     emitDraftState(draft !== null);
   }, [draft]);
+
+  useEffect(() => {
+    if (!discardConfirmOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [discardConfirmOpen]);
 
   const recentSessions = useMemo(() => sortByDateDesc(Array.isArray(sessions) ? sessions : []).slice(0, 5), [sessions]);
   const activeWorkout = draft;
@@ -72,6 +87,15 @@ export function LogPageV2() {
   const setCount =
     activeWorkout?.exercises.reduce((sum, exercise) => sum + (exercise.sets?.length ?? 0), 0) ?? 0;
   const canSave = (activeWorkout?.exercises.length ?? 0) > 0;
+  const exerciseEstimates = useMemo<Record<string, ExerciseEstimateHint | null>>(() => {
+    const blocks = activeWorkout?.exercises ?? [];
+    return Object.fromEntries(
+      blocks.map((block) => [
+        block.id,
+        estimateExerciseFromHistory(sessions, block.exercise.id, block.targetReps ?? 12),
+      ]),
+    );
+  }, [activeWorkout?.exercises, sessions]);
 
   const updateDraft = (updater: (current: WorkoutSession) => WorkoutSession) => {
     setDraft((current) => {
@@ -85,15 +109,17 @@ export function LogPageV2() {
   };
 
   const addExerciseBlock = (exercise: ExerciseRef) => {
+    const nextId = createId();
     updateDraft((current) => {
       const nextBlock: ExerciseBlock = {
-        id: createId(),
+        id: nextId,
         order: current.exercises.length,
         exercise: {
           id: exercise.id,
           name: exercise.name,
           muscleGroup: exercise.muscleGroup,
         },
+        targetReps: 12,
         sets: [],
       };
 
@@ -102,6 +128,7 @@ export function LogPageV2() {
         exercises: [...current.exercises, nextBlock],
       };
     });
+    setPendingScrollExerciseId(nextId);
   };
 
   const removeExerciseBlock = (blockId: string) => {
@@ -110,6 +137,13 @@ export function LogPageV2() {
       exercises: current.exercises
         .filter((block) => block.id !== blockId)
         .map((block, index) => ({ ...block, order: index })),
+    }));
+  };
+
+  const updateExerciseBlock = (blockId: string, patch: Partial<ExerciseBlock>) => {
+    updateDraft((current) => ({
+      ...current,
+      exercises: current.exercises.map((block) => (block.id === blockId ? { ...block, ...patch } : block)),
     }));
   };
 
@@ -178,6 +212,60 @@ export function LogPageV2() {
     setPanelOpen(false);
   };
 
+  const confirmDiscardWorkout = () => {
+    setDraft(null);
+    setPendingScrollExerciseId(null);
+    setDiscardConfirmOpen(false);
+  };
+
+  const discardModal =
+    discardConfirmOpen && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            className="plasma-dialog-root plasma-dialog-root--centered"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logv2-discard-title"
+          >
+            <button
+              type="button"
+              className="plasma-overlay"
+              onClick={() => setDiscardConfirmOpen(false)}
+              aria-label="Close discard dialog"
+            />
+            <section className="plasma-detail-panel plasma-confirm-panel">
+              <div className="plasma-panel-inner">
+                <div className="plasma-panel-header">
+                  <div>
+                    <h2 id="logv2-discard-title" className="plasma-panel-title">
+                      Discard active workout?
+                    </h2>
+                    <p className="plasma-panel-meta">
+                      This will remove the current active workout draft without saving it. Saved sessions will stay
+                      unchanged.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="plasma-panel-actions">
+                  <button
+                    type="button"
+                    className="plasma-btn-secondary"
+                    onClick={() => setDiscardConfirmOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="button" className="plasma-btn-tertiary" onClick={confirmDiscardWorkout}>
+                    Discard
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>,
+          document.body
+        )
+      : null;
+
   return (
     <div className="plasma-log-theme plasma-log-page">
       <div className="plasma-log-shell">
@@ -215,6 +303,7 @@ export function LogPageV2() {
             canSave={canSave}
             onTitleChange={(value) => updateDraft((current) => ({ ...current, title: value }))}
             onSave={handleSave}
+            onDiscard={() => setDiscardConfirmOpen(true)}
           >
             <ExerciseListEditor
               exercises={activeWorkout.exercises}
@@ -223,7 +312,11 @@ export function LogPageV2() {
               onAddSet={addSet}
               onRemoveSet={removeSet}
               onRemoveExercise={removeExerciseBlock}
+              onUpdateExercise={updateExerciseBlock}
               onUpdateSet={updateSet}
+              pendingScrollExerciseId={pendingScrollExerciseId}
+              onScrollHandled={() => setPendingScrollExerciseId(null)}
+              exerciseEstimates={exerciseEstimates}
             />
           </ActiveSessionCard>
         )}
@@ -245,6 +338,8 @@ export function LogPageV2() {
         onClose={() => setPanelOpen(false)}
         onRepeat={handleRepeat}
       />
+
+      {discardModal}
     </div>
   );
 }

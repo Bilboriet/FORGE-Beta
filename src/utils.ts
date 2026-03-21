@@ -269,3 +269,50 @@ export function estimate1RM_Epley(weightKg: number, reps: number): number | null
   return weightKg * (1 + reps / 30);
 }
 
+export type ExerciseEstimateHint = {
+  e1rmKg: number;
+  worksetKg: number;
+  usableSetCount: number;
+};
+
+export function estimateWorksetLoadFromE1RM(e1rmKg: number, targetReps: number): number | null {
+  if (!Number.isFinite(e1rmKg) || e1rmKg <= 0) return null;
+  if (!Number.isFinite(targetReps) || targetReps <= 0) return null;
+  return e1rmKg / (1 + targetReps / 30);
+}
+
+export function estimateExerciseFromHistory(
+  sessions: WorkoutSession[],
+  exerciseId: string,
+  targetReps: number
+): ExerciseEstimateHint | null {
+  if (!exerciseId) return null;
+
+  const usableE1Rms: number[] = [];
+  const recentSessions = sortByDateDesc(Array.isArray(sessions) ? sessions : []).slice(0, 8);
+
+  for (const session of recentSessions) {
+    const blocks = Array.isArray(session.exercises) ? session.exercises : [];
+    for (const block of blocks) {
+      if (block.exercise?.id !== exerciseId) continue;
+      const sets = Array.isArray(block.sets) ? block.sets : [];
+      for (const set of sets) {
+        const e1rm = estimate1RM_Epley(Number(set.weightKg ?? 0), Number(set.reps ?? 0));
+        if (e1rm && Number.isFinite(e1rm) && e1rm > 0) usableE1Rms.push(e1rm);
+      }
+    }
+  }
+
+  if (usableE1Rms.length < 3) return null;
+
+  const recentRelevant = usableE1Rms.slice(0, 12);
+  const e1rmKg = median(recentRelevant);
+  const worksetKg = estimateWorksetLoadFromE1RM(e1rmKg, targetReps);
+  if (!worksetKg) return null;
+
+  return {
+    e1rmKg,
+    worksetKg,
+    usableSetCount: recentRelevant.length,
+  };
+}

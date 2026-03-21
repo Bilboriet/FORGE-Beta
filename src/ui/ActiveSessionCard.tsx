@@ -8,6 +8,7 @@ type ActiveSessionCardProps = {
   canSave: boolean;
   onTitleChange: (value: string) => void;
   onSave: () => void;
+  onDiscard: () => void;
   children: ReactNode;
 };
 
@@ -19,6 +20,7 @@ export function ActiveSessionCard({
   canSave,
   onTitleChange,
   onSave,
+  onDiscard,
   children,
 }: ActiveSessionCardProps) {
   return (
@@ -31,9 +33,14 @@ export function ActiveSessionCard({
             <p className="plasma-log-value">{formattedDate}</p>
           </div>
 
-          <button type="button" className="plasma-btn-primary" onClick={onSave} disabled={!canSave}>
-            Save Workout
-          </button>
+          <div className="plasma-hero-actions">
+            <button type="button" className="plasma-btn-ghost" onClick={onDiscard}>
+              Discard Workout
+            </button>
+            <button type="button" className="plasma-btn-primary" onClick={onSave} disabled={!canSave}>
+              Save Workout
+            </button>
+          </div>
         </div>
 
         <label className="sr-only" htmlFor="logv2-active-session-title">

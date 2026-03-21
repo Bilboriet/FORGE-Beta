@@ -64,6 +64,7 @@ export type ExerciseBlock = {
   id: ID;               // unique per block
   order: number;        // ordering within a workout
   exercise: ExerciseRef;
+  targetReps?: number;
 
   sets: SetLog[];
   note?: string;
