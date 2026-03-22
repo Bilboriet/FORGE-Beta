@@ -13,6 +13,24 @@ console.log(`${STARTUP_LOG} main boot`);
 const hasWindow = typeof window !== "undefined";
 const hasNavigator = typeof navigator !== "undefined";
 
+async function nukeOldServiceWorkers() {
+  if (!hasNavigator || !("serviceWorker" in navigator)) return;
+
+  const registrations = await navigator.serviceWorker.getRegistrations();
+
+  for (const reg of registrations) {
+    try {
+      console.log("[FORGE_SW] Unregistering:", reg.scope);
+      await reg.unregister();
+    } catch (err) {
+      console.warn("[FORGE_SW] Failed to unregister:", err);
+    }
+  }
+}
+
+// Diagnostic experiment: clear any stale SW state before current startup flow runs.
+await nukeOldServiceWorkers();
+
 if (hasWindow) {
   try {
     const nextLoadCount = Number(window.sessionStorage.getItem("forge:startup_load_count") ?? "0") + 1;
