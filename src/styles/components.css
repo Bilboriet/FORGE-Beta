@@ -548,6 +548,12 @@ button {
   backface-visibility: hidden;
 }
 
+.forge-introOverlay--diagnostic {
+  will-change: auto;
+  transform: none;
+  backface-visibility: visible;
+}
+
 .forge-introPanel {
   width: min(100%, 560px);
   max-height: min(86vh, 860px);
