@@ -6,10 +6,12 @@ export function PageMotion({
   children,
   variant = "fade",
   delayMs = 0,
+  disabled = false,
 }: {
   children: React.ReactNode;
   variant?: Variant;
   delayMs?: number;
+  disabled?: boolean;
 }) {
   const [mountKey, setMountKey] = useState(0);
 
@@ -17,6 +19,10 @@ export function PageMotion({
   useEffect(() => {
     setMountKey((k) => k + 1);
   }, []);
+
+  if (disabled) {
+    return <div>{children}</div>;
+  }
 
   return (
     <div key={mountKey}>

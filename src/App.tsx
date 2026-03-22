@@ -148,6 +148,10 @@ export default function App() {
 
   // Remember/restore scroll position per tab (mobile-friendly "app feel")
   useEffect(() => {
+    if (startupNoticeOpen) {
+      return;
+    }
+
     const prev = prevTabRef.current;
     scrollPositionsRef.current[prev] = window.scrollY || 0;
     const nextY = scrollPositionsRef.current[tab] ?? 0;
@@ -155,7 +159,7 @@ export default function App() {
       window.scrollTo({ top: nextY, behavior: "auto" });
     });
     prevTabRef.current = tab;
-  }, [tab]);
+  }, [tab, startupNoticeOpen]);
 
   // Global route-change signal for transient overlays/modals.
   useEffect(() => {
@@ -303,7 +307,7 @@ export default function App() {
       <div className="forge-pageLabel">{pageLabel}</div>
 
       <main className="forgeMain">
-        <PageMotion key={String(tab)} variant={motionVariant}>
+        <PageMotion key={String(tab)} variant={motionVariant} disabled={startupNoticeOpen}>
           <Page tab={tab} />
         </PageMotion>
       </main>
