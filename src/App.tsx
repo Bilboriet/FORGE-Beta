@@ -14,6 +14,8 @@ import { LS_KEYS } from "./constants";
 import { LogPageV2 } from "./pages/LogPageV2";
 import { WORKOUT_V2_KEYS } from "./lib/workoutUtils";
 
+const STARTUP_LOG = "[FORGE_STARTUP]";
+
 function Page({ tab }: { tab: TabKey }) {
   switch (tab) {
     case "dashboard":
@@ -97,6 +99,29 @@ export default function App() {
   const navOverrideRef = useRef(false);
   const scrollPositionsRef = useRef<Partial<Record<TabKey, number>>>({});
   const prevTabRef = useRef<TabKey>(tab);
+  const loggedFirstRenderRef = useRef(false);
+
+  if (!loggedFirstRenderRef.current) {
+    loggedFirstRenderRef.current = true;
+    console.log(`${STARTUP_LOG} App first render`, {
+      initialTab: tab,
+      startupNoticeOpen,
+      hasDraft,
+    });
+  }
+
+  useEffect(() => {
+    console.log(`${STARTUP_LOG} App state snapshot`, {
+      tab,
+      startupNoticeOpen,
+      hasDraft,
+    });
+  }, [tab, startupNoticeOpen, hasDraft]);
+
+  useEffect(() => {
+    if (!startupNoticeOpen) return;
+    console.log(`${STARTUP_LOG} startup modal mounted`);
+  }, [startupNoticeOpen]);
 
   useEffect(() => {
     const onDraft = (ev: Event) => {
@@ -184,7 +209,17 @@ export default function App() {
       <BottomNav active={tab} onChange={setTab} hasDraft={hasDraft} />
 
       {startupNoticeOpen ? (
-        <div className="forge-introOverlay" role="dialog" aria-modal="true" aria-label="Notice">
+        <div
+          className="forge-introOverlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Notice"
+          onPointerDown={(event) => {
+            console.log(`${STARTUP_LOG} startup overlay pointerdown`, {
+              targetTag: (event.target as HTMLElement | null)?.tagName ?? null,
+            });
+          }}
+        >
           <section className="forge-introPanel">
             <div className="forge-introContent">
               <h2 className="forge-introTitle">WELCOME TO FORGE</h2>
@@ -255,7 +290,11 @@ export default function App() {
             <div className="forge-introActions">
               <button
                 className="forge-btn forge-btn--hot"
+                onPointerDown={() => {
+                  console.log(`${STARTUP_LOG} startup OK pointerdown`);
+                }}
                 onClick={() => {
+                  console.log(`${STARTUP_LOG} startup OK click`);
                   setStartupNoticeOpen(false);
                 }}
               >

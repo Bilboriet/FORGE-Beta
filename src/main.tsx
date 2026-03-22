@@ -7,9 +7,28 @@ import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
 import StimulusValidationPageV2 from "./pages/StimulusValidationPageV2.tsx";
 import { initTheme } from "./theme/v2";
 
-console.log("FORGE MAIN LOADED");
+const STARTUP_LOG = "[FORGE_STARTUP]";
+
+console.log(`${STARTUP_LOG} main boot`);
 const hasWindow = typeof window !== "undefined";
 const hasNavigator = typeof navigator !== "undefined";
+
+if (hasWindow) {
+  try {
+    const nextLoadCount = Number(window.sessionStorage.getItem("forge:startup_load_count") ?? "0") + 1;
+    window.sessionStorage.setItem("forge:startup_load_count", String(nextLoadCount));
+    console.log(`${STARTUP_LOG} load count`, nextLoadCount);
+  } catch (error) {
+    console.warn(`${STARTUP_LOG} sessionStorage unavailable`, error);
+  }
+}
+
+if (hasNavigator && "serviceWorker" in navigator) {
+  console.log(`${STARTUP_LOG} sw controller present`, !!navigator.serviceWorker.controller);
+  if (navigator.serviceWorker.controller) {
+    console.log(`${STARTUP_LOG} sw controller script`, navigator.serviceWorker.controller.scriptURL);
+  }
+}
 
 // Dev-safety: unregister any old Service Workers (prevents Workbox caching issues)
 if (import.meta.env.DEV && hasNavigator && "serviceWorker" in navigator) {
@@ -70,6 +89,12 @@ if (hasWindow) {
 if (hasNavigator && "serviceWorker" in navigator) {
   // Remove legacy hand-written /sw.js registrations that may cache auth callback aggressively.
   navigator.serviceWorker.getRegistrations().then((regs) => {
+    console.log(`${STARTUP_LOG} existing sw registrations`, regs.map((reg) => ({
+      scope: reg.scope,
+      active: reg.active?.scriptURL ?? null,
+      waiting: reg.waiting?.scriptURL ?? null,
+      installing: reg.installing?.scriptURL ?? null,
+    })));
     regs.forEach((reg) => {
       const script =
         reg.active?.scriptURL ?? reg.waiting?.scriptURL ?? reg.installing?.scriptURL ?? "";
@@ -85,21 +110,25 @@ if (hasNavigator && "serviceWorker" in navigator) {
   registerSW({
     immediate: true,
     onNeedRefresh() {
-      console.warn("[FORGE][SW] New version available, reloading...");
-      window.location.reload();
+      console.warn(`${STARTUP_LOG} onNeedRefresh fired - reload suppressed for diagnosis`);
     },
     onOfflineReady() {
-      console.info("[FORGE][SW] Offline ready");
+      console.info(`${STARTUP_LOG} onOfflineReady fired`);
     },
     onRegisteredSW(swUrl, registration) {
-      console.info("[FORGE][SW] registered", swUrl);
+      console.info(`${STARTUP_LOG} onRegisteredSW`, swUrl, {
+        scope: registration?.scope ?? null,
+        active: registration?.active?.scriptURL ?? null,
+        waiting: registration?.waiting?.scriptURL ?? null,
+        installing: registration?.installing?.scriptURL ?? null,
+      });
       if (!registration) return;
       registration.addEventListener("updatefound", () => {
-        console.info("[FORGE][SW] update found");
+        console.info(`${STARTUP_LOG} service worker updatefound`);
       });
     },
     onRegisterError(error) {
-      console.error("[FORGE][SW] register error", error);
+      console.error(`${STARTUP_LOG} onRegisterError`, error);
     },
   });
 }
